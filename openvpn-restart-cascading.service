@@ -1,0 +1,16 @@
+[Unit]
+Description=Service für automatischen VPN (re)connect + Kaskadierung
+After=auditd.service systemd-user-sessions.service time-sync.target
+
+[Service]
+User=root
+TimeoutStartSec=0
+Type=simple
+KillMode=process
+ExecStart=/etc/systemd/system/openvpn_service_restart_cascading.sh
+Restart=always
+RestartSec=1
+LimitNOFILE=5555
+
+[Install]
+WantedBy=multi-user.target
