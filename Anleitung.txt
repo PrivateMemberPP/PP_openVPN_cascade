@@ -3,6 +3,6 @@ Installationsanleitung
 
 1. per Terminal anmelden und z.B. in das home-Verzeichnis des angemeldeten Users wechseln: 'cd ~'
 2. Download der Installationsdatei: 'wget https://raw.githubusercontent.com/PrivateMemberPP/PP_openVPN_cascade/master/install_ovpn_cascading.sh'
-3. Heruntergeladene Datei ausfuehrbar machen: chmod 755 install_ovpn_cascading.sh
+3. Heruntergeladene Datei ausfuehrbar machen: 'chmod 755 install_ovpn_cascading.sh'
 4. Datei als 'root' ausfuehren: 'sudo ./install_ovpn_cascading.sh'
 5. Hinweise am Ende der Installation beachten und durchfuehren
