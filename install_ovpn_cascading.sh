@@ -85,11 +85,8 @@ mv $curdir'/OVPN_SWITCH/'$FILE_DL_WATC_SRV $servicepath
 mv $curdir'/OVPN_SWITCH/'$FILE_DL_CASC_SCR $scriptpath_PP
 
 # die Scripte ausfuehrbar machen
-chmod -x $scriptpath'/'$FILE_DL_PRIM_SCR
 chmod 755 $scriptpath'/'$FILE_DL_PRIM_SCR
-chmod -x $scriptpath'/'$FILE_DL_WATC_SCR
 chmod 755 $scriptpath'/'$FILE_DL_WATC_SCR
-chmod -x $scriptpath_PP'/'$FILE_DL_CASC_SCR
 chmod 755 $scriptpath_PP'/'$FILE_DL_CASC_SCR
 
 # die Services ausfuehrbar machen und aktivieren
@@ -116,16 +113,16 @@ printf "\n------------------------------------------------"
 printf "\n\nPerfectPrivacy Konfigurationen bitte im folgenden Verzeichnis hinterlegen:\n==> $path_ovpn_conf"
 printf "\nHinweis: es werden saemtliche Konfigurationen (*.conf) verwendet, welche sich in diesem Verzeichnis befinden!"
 printf "\n\nWeitere Schritte notwendig!"
-printf "\n---------------------------"
+printf "\n--------------------------"
 printf "\nBitte folgende Anleitung aufrufen:\n==> https://www.perfect-privacy.com/de/manuals/linux_openvpn_terminal"
 printf "\nEs muessen, laut dieser Anleitung, lediglich noch folgende Schritte ausgefuehrt werden:"
 printf "\n\t- Herunterladen der PerfectPrivacy Konfigurationen"
-printf "\n\t- Erstellen der 'password.txt' und anschließendes eintragen der Anmeldedaten"
+printf "\n\t- Erstellen der 'password.txt' und anschlißendes eintragen der Anmeldedaten"
 printf "\n\t- Die 'password.txt' in den heruntergeladenen Konfigurationen eintragen"
 printf "\n\t- Neustarten, damit die soeben installierten Dienste gestartet werden"
 printf "\n\nDie Dienste heißen 'openvpn-restart-cascading.service' und 'openvpn-restart-cascading-watchdog.service'"
 printf "\nDienstverwaltung über folgende Befehle:"
 printf "\n\t- sudo systemctl start/stop/restart openvpn-restart-cascading.service"
 printf "\n\t- sudo systemctl start/stop/restart openvpn-restart-cascading-watchdog.service"
-printf "\n\nNach dem Neustart befindet sich das Logverzeichnis hier: $folder_logpath"
+printf "\n\nDas Logverzeichnis befindet sich hier: $folder_logpath"
 printf "\n\n------------------------------------------------\n\n"
