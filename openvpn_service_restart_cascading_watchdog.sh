@@ -34,7 +34,7 @@ function check_inactivity {
 function check_state {
 	wget -q -O - https://checkip.perfect-privacy.com/csv | grep -i $current_state >> /dev/null
 	RET=$?
-	sleep 30
+	sleep 10
 }
 function cleanup {
 	sudo killall openvpn
