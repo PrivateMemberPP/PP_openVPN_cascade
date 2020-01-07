@@ -60,6 +60,14 @@ then
 	apt-get install resolvconf -qq > /dev/null
 fi
 
+# pruefen, ob 'psmisc' installiert ist -> falls nein, installieren!
+dpkg-query -l | grep psmisc > /dev/null
+
+if [ $? -eq "1" ];
+then
+	apt-get install psmisc -qq > /dev/null
+fi
+
 ### notwendige Pakete installiert
 
 # in welchem Verzeichnis befinden wir uns?
