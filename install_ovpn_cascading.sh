@@ -85,13 +85,13 @@ mv $curdir'/OVPN_SWITCH/'$FILE_DL_WATC_SRV $servicepath
 mv $curdir'/OVPN_SWITCH/'$FILE_DL_CASC_SCR $scriptpath_PP
 
 # die Scripte ausfuehrbar machen
-chmod 755 $scriptpath'/'$FILE_DL_PRIM_SCR
-chmod 755 $scriptpath'/'$FILE_DL_WATC_SCR
-chmod 755 $scriptpath_PP'/'$FILE_DL_CASC_SCR
+chmod +x $scriptpath'/'$FILE_DL_PRIM_SCR
+chmod +x $scriptpath'/'$FILE_DL_WATC_SCR
+chmod +x $scriptpath_PP'/'$FILE_DL_CASC_SCR
 
 # die Services ausfuehrbar machen und aktivieren
-chmod 777 $servicepath'/'$FILE_DL_PRIM_SRV
-chmod 777 $servicepath'/'$FILE_DL_WATC_SRV
+chmod +x $servicepath'/'$FILE_DL_PRIM_SRV
+chmod +x $servicepath'/'$FILE_DL_WATC_SRV
 
 systemctl daemon-reload
 
