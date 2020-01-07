@@ -28,6 +28,10 @@ DL_CASC_SCR=https://www.perfect-privacy.com/downloads/updown.sh
 #
 ### ENDE Variablen deklarieren
 
+# falls ein Update durchgefuehrt wird, erstmal die Dienste beenden
+systemctl stop openvpn-restart-cascading.service
+systemctl stop openvpn-restart-cascading-watchdog.service
+
 # Paketdaten und Repository aktualisieren
 apt-get update
 
