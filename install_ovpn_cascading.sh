@@ -65,6 +65,7 @@ curdir="${PWD}"
 mkdir $curdir'/'OVPN_SWITCH
 
 # Download der benoetigten Dateien
+# Dateinamen in variablen speichern
 wget -q -P $curdir'/OVPN_SWITCH/' $DL_PRIM_SCR > /dev/null
 FILE_DL_PRIM_SCR=($(echo $DL_PRIM_SCR | rev | cut -d '/' -f 1 | rev))
 wget -q -P $curdir'/OVPN_SWITCH/' $DL_WATC_SCR > /dev/null
