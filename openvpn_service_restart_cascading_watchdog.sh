@@ -17,7 +17,7 @@ checkfile_watchdog=/var/log/ovpn_reconnect/exitnode.log
 #
 function get_state {
 	current_state=$(cat $checkfile_watchdog)
-	sleep 5
+	sleep 1
 }
 function check_inactivity {
 	grep "Inactivity timeout (--ping-restart), restarting" "$folder_logpath"log.vpnhop*
