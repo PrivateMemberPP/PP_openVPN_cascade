@@ -127,5 +127,5 @@ printf "\n\nDie Dienste heißen 'openvpn-restart-cascading.service' und 'openvpn
 printf "\nDienstverwaltung über folgende Befehle:"
 printf "\n\t- sudo systemctl start/stop/restart openvpn-restart-cascading.service"
 printf "\n\t- sudo systemctl start/stop/restart openvpn-restart-cascading-watchdog.service"
-printf "\n\nDas Logverzeichnis befindet sich hier: $folder_logpath"
+printf "\n\nNach dem Neustart befindet sich das Logverzeichnis hier: $folder_logpath"
 printf "\n\n------------------------------------------------\n\n"
