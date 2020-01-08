@@ -20,11 +20,11 @@ checkfile_watchdog="$folder_logpath"exitnode.log
 # Pfad zur Watchdog-Script-Datei (openvpn_service_restart_cascading_watchdog.sh)
 scriptfile_watchdog=/etc/systemd/system/openvpn_service_restart_cascading_watchdog.sh
 #
-# minimale Verbindungsdauer in Sekunden / 10 (da zwischen jedem Check 10 Sekunden gewartet wird => z.B. '100' entspricht '1000' Sekunden)
-mintime=1000
+# minimale Verbindungsdauer in Sekunden
+mintime=7200
 #
-# maximale Verbindungsdauer in Sekunden / 10 (da zwischen jedem Check 10 Sekunden gewartet wird => z.B. '100' entspricht '1000' Sekunden)
-maxtime=3000
+# maximale Verbindungsdauer in Sekunden
+maxtime=10800
 #
 # Wie viele HOPs sollen verbunden werden?
 maxhop=2
@@ -34,7 +34,7 @@ maxhop=2
 timeoutcount=20
 #
 # LOGDELETE: Nach wie vielen -erfolgreichen- neuen VPN-Verbindungen soll das LOG geloescht werden? (Schutz, damit dieses nicht den Speicher unendlich vollschreibt)
-logdelete_count=4
+logdelete_count=20
 #
 ### ENDE Variablen deklarieren ###
 
@@ -76,6 +76,19 @@ function remux_server_list {
 function double_time {
 	inc_timeout=`expr $inc_timeout \* 2`
 }
+function write_timestamp {
+	echo -e '\n'Es ist jetzt':' $(date) >> $logfile_script
+}
+function get_cur_tim {
+	curtim_dat=$(date +"%Y-%m-%dT%H:%M:%S")
+	curtim_sec=$(date --date=$curtim_dat +%s)
+}
+function get_end_tim {
+	curtim_dat=$(date +"%Y-%m-%dT%H:%M:%S")
+	curtim_sec=$(date --date=$curtim_dat +%s)
+	endtim_sec=$(($curtim_sec+$timer))
+	endtim_dat=$(date -d @$endtim_sec +"%a %e. %b %H:%M:%S %Z %Y")
+}
 function vpn_connect_initial_one {
 	cleanup
 	hopnr=0
@@ -110,7 +123,7 @@ function vpn_connect_following_n {
 	# bei Bedarf, die Verbindungen zu den weiteren HOPs innerhalb eines Loops
 	if [ $maxhop -gt "1" ];
 	then
-		echo -e '==>' MaxHOP auf "$maxhop" festgelegt, nun folgen'/'folgt "$[$maxhop-1]" Kaskade'('n')''!''\n' >> $logfile_script
+		echo -e '==>' MaxHOP auf "$maxhop" festgelegt, nun folgen'/'folgt "$[$maxhop-1]" Verbindung'('en')''!''\n' >> $logfile_script
 		while [ $hopnr -lt $[$maxhop-1] ]
 		do
 			double_time
@@ -195,7 +208,8 @@ then
 	echo -e Maximale HOPs':''\t''\t''\t'$maxhop >> $logfile_script
 	echo -e Anzahl Configs im Array':''\t'$server_list_count >> $logfile_script
 	echo MaxHOP muss kleiner oder gleich Anzahl der Configs sein'!!!' >> $logfile_script
-	echo Script wird nun beendet'!' Bitte anpassen und den Dienst neu starten'!' >> $logfile_script
+	echo Script wird nun laufend neugestartet, bis die Anzahl Configs passt'!' Bitte anpassen und den Dienst neu starten'!' >> $logfile_script
+	echo Die Configs muessen sich hier befinden: $path_ovpn_conf >> $logfile_script
 	sleep 20
 	exit 1
 fi
@@ -204,32 +218,34 @@ fi
 ### Beginn aeussere Schleife - Endlosschleife ###
 while true
 do
-	# Zufallswert zwischen x und y generieren, welcher die Verbindungsdauer * 10 in s darstellt
+	# Schalter fuer Zeitpruefung zuruecksetzen
+	i=0
+	endtim_sec=0
+
+	# Dauer der Verbindung ermitteln
 	timer=$(shuf -i "$mintime"-"$maxtime" -n 1)
 
 	# Timeout-Variable fuer diese Verbindungssitzung aus der Variablendeklaration uebernehmen
 	inc_timeout=$timeoutcount
 
-	# Counter zum Reconnect initialisieren
-	i=0
+	echo   >> $logfile_script
+	echo ------------------------------------------------------------------ >> $logfile_script
+	echo Die folgende Verbindung bleibt fuer $timer Sekunden bestehen >> $logfile_script
+	echo ------------------------------------------------------------------ >> $logfile_script
 
-	echo   >> $logfile_script
-	echo ------------------------------------------------------------------ >> $logfile_script
-	echo Die folgende Verbindung bleibt fuer $(($timer*10)) Sekunden bestehen >> $logfile_script
-	echo ------------------------------------------------------------------ >> $logfile_script
-	echo   >> $logfile_script
+	write_timestamp
 
 	### Beginn innere Schleife ###
-	while [ $i -le $timer ]
+	while [[ $endtim_sec -eq "0" ]] || [[ $curtim_sec -le $endtim_sec ]]
 	do
 		# pruefen, ob eine aktive VPN-Verbindung besteht
 		wget -q -O - https://checkip.perfect-privacy.com/csv | grep perfect-privacy.com >> /dev/null
 
 		if [ $? -eq "0" ];
 		then
-			echo -e VPN-Verbindung mit Kaskade besteht seit':''\t''\t'$(($i*10)) Sekunden >> $logfile_script
 			# 10 Sekunden warten, bevor erneut geprueft wird
 			sleep 10
+			get_cur_tim
 		else
 			# alle Standort-Configs in einem Array ablegen
 			ermittle_server
@@ -243,15 +259,19 @@ do
 			# Falls maxhop > 1, dann los!
 			vpn_connect_following_n
 
+			get_end_tim
+
+			echo -e Verbindungsstart':''\t'$(date) >> $logfile_script
+			echo -e Verbindungsende':''\t'$endtim_dat >> $logfile_script
 		fi
-		# i inkrementieren, da dieses unser Counter ist, welcher gegen den Verbinsungstimer laeuft
-		i=$((i+1))
 	done
 	# raus aus der Schleife, da der Countdown abgelaufen ist, nun muessen die neuen Verbindungen aufgebaut werden
 	### ENDE innere Schleife ###
 
 	# nun dem Watchdog mitteilen, dass wieder bis zum naechsten Connect gewartet werden muss
 	sudo echo Warten > $checkfile_watchdog
+
+	echo Zeit abgelaufen'!' Die Verbindungen werden jetzt abgebaut'!' >> $logfile_script
 
 	# alle VPN-Verbindungen beenden, damit Tunnel abgebaut werden
 	cleanup
