@@ -90,11 +90,11 @@ wget -q -P $curdir'/OVPN_SWITCH/' $DL_CASC_SCR > /dev/null
 FILE_DL_CASC_SCR=($(echo $DL_CASC_SCR | rev | cut -d '/' -f 1 | rev))
 
 # die Dateien in den Zielverzeichnissen ablegen
-mv $curdir'/OVPN_SWITCH/'$FILE_DL_PRIM_SCR $scriptpath
-mv $curdir'/OVPN_SWITCH/'$FILE_DL_WATC_SCR $scriptpath
-mv $curdir'/OVPN_SWITCH/'$FILE_DL_PRIM_SRV $servicepath
-mv $curdir'/OVPN_SWITCH/'$FILE_DL_WATC_SRV $servicepath
-mv $curdir'/OVPN_SWITCH/'$FILE_DL_CASC_SCR $scriptpath_PP
+mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_PRIM_SCR $scriptpath
+mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_WATC_SCR $scriptpath
+mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_PRIM_SRV $servicepath
+mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_WATC_SRV $servicepath
+mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_CASC_SCR $scriptpath_PP
 
 # die Scripte ausfuehrbar machen
 chmod +x $scriptpath'/'$FILE_DL_PRIM_SCR
