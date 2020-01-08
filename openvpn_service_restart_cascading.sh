@@ -218,8 +218,7 @@ fi
 ### Beginn aeussere Schleife - Endlosschleife ###
 while true
 do
-	# Schalter fuer Zeitpruefung zuruecksetzen
-	i=0
+	# Endtime vorerst zuruecksetzen, damit die Schleife aufgerufen wird
 	endtim_sec=0
 
 	# Dauer der Verbindung ermitteln
