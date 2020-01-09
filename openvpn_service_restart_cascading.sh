@@ -75,6 +75,7 @@ function remux_server_list {
 }
 function double_time {
 	inc_timeout=`expr $inc_timeout \* 2`
+	inc_timeout="${inc_timeout}.0"
 }
 function write_timestamp {
 	echo -e '\n'Es ist jetzt':' $(date) >> $logfile_script
