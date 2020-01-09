@@ -30,6 +30,7 @@ DL_CASC_SCR=https://www.perfect-privacy.com/downloads/updown.sh
 
 printf "\n\nScript zur Installation der automatischen PP openVPN Kaskadierungsdienste"
 printf "\n-------------------------------------------------------------------------\n\n"
+printf "... der Vorgang dauert weniger als eine Minute.\n\n"
 
 # Paketdaten und Repository aktualisieren
 apt-get update -qq
