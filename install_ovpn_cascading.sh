@@ -64,6 +64,14 @@ then
 	apt-get install psmisc -qq > /dev/null
 fi
 
+# pruefen, ob 'bc' installiert ist -> falls nein, installieren!
+dpkg-query -l | grep bc > /dev/null
+
+if [ $? -eq "1" ];
+then
+	apt-get install bc -qq > /dev/null
+fi
+
 ### notwendige Pakete installiert
 
 # in welchem Verzeichnis befinden wir uns?
