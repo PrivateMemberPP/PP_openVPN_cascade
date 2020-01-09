@@ -83,7 +83,7 @@ fi
 curdir="${PWD}"
 
 # Arbeitsverzeichnis erstellen
-mkdir $curdir'/'OVPN_SWITCH > /dev/null
+mkdir $curdir'/'OVPN_SWITCH
 
 # Download der benoetigten Dateien
 # Dateinamen in variablen speichern
@@ -140,7 +140,7 @@ rm -r $curdir'/'OVPN_SWITCH
 # Statusausgabe
 path_ovpn_conf=($(grep 'path_ovpn_conf=' $scriptpath'/'$FILE_DL_PRIM_SCR | rev | cut -d '=' -f 1 | rev))
 folder_logpath=($(grep 'folder_logpath=' $scriptpath'/'$FILE_DL_PRIM_SCR | rev | cut -d '=' -f 1 | rev))
-mkdir $path_ovpn_conf
+mkdir -p $path_ovpn_conf
 
 printf "\n\n------------------------------------------------"
 printf "\nInstallation ERFOLGREICH abgeschlossen!"
