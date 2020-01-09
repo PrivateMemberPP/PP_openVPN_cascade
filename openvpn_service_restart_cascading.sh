@@ -104,7 +104,7 @@ function vpn_connect_initial_one {
 	# warten, bis der Suchstring im Anschluss der erfolgreichen Verbindung gefunden wurde
 	until grep 'Initialization Sequence Completed' "$folder_logpath"'log.vpnhop'"$[$hopnr+1]" >> /dev/null;
 	do
-		sleep 0.2;
+		sleep 1;
 
 		if [ $errorcount -eq $inc_timeout ];
 		then
