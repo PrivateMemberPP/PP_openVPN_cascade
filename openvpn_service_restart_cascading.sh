@@ -75,7 +75,6 @@ function remux_server_list {
 }
 function double_time {
 	inc_timeout=`expr $inc_timeout \* 2`
-	inc_timeout="${inc_timeout}.0"
 }
 function write_timestamp {
 	echo -e '\n'Es ist jetzt':' $(date) >> $logfile_script
@@ -107,7 +106,7 @@ function vpn_connect_initial_one {
 	do
 		sleep 0.2;
 
-		if [ $errorcount -eq $inc_timeout ];
+		if (( $(echo "$errorcount > $inc_timeout" | bc -l) ));
 		then
 			echo -e TIMEOUT':' Verbindung zu HOP Nr. $[$hopnr+1] NICHT erfolgreich, nun von vorne beginnen'!' >> $logfile_script
 			sudo echo Warten > $checkfile_watchdog
@@ -145,7 +144,7 @@ function vpn_connect_following_n {
 			do
 				sleep 0.2;
 
-				if [ $errorcount -eq $inc_timeout ];
+				if (( $(echo "$errorcount > $inc_timeout" | bc -l) ));
 				then
 					echo -e TIMEOUT':' Verbindung zu HOP Nr. $[$hopnr+1] NICHT erfolgreich, nun von vorne beginnen'!' >> $logfile_script
 					sudo echo Warten > $checkfile_watchdog
