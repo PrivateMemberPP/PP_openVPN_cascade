@@ -27,7 +27,7 @@ mintime=7200
 maxtime=10800
 #
 # Wie viele HOPs sollen verbunden werden?
-maxhop=2
+maxhop=3
 #
 # Timeout-Counter (in Sekunden) zum Verbindungsaufbau (Wert wird je HOP verdoppelt)
 # Bei einem Wert von '10' somit HOP1: 10; HOP2: 20; HOP3: 40; HOP4: 80 usw...
@@ -44,9 +44,9 @@ function cleanup {
 	sudo killall openvpn
 	sleep 2
 	sudo tmux kill-server
-	sleep 2
+	sleep 0.5
 	eval sudo rm "$folder_logpath"log.vpnhop*
-	sleep 2
+	sleep 0.2
 }
 function kill_primary_process {
 	cleanup
@@ -104,7 +104,7 @@ function vpn_connect_initial_one {
 	# warten, bis der Suchstring im Anschluss der erfolgreichen Verbindung gefunden wurde
 	until grep 'Initialization Sequence Completed' "$folder_logpath"'log.vpnhop'"$[$hopnr+1]" >> /dev/null;
 	do
-		sleep 1;
+		sleep 0.2;
 
 		if [ $errorcount -eq $inc_timeout ];
 		then
@@ -142,7 +142,7 @@ function vpn_connect_following_n {
 			# warten, bis der Suchstring im Anschluss der erfolgreichen Verbindung gefunden wurde
 			until grep 'Initialization Sequence Completed' "$folder_logpath"'log.vpnhop'"$[$hopnr+1]" >> /dev/null;
 			do
-				sleep 1;
+				sleep 0.2;
 
 				if [ $errorcount -eq $inc_timeout ];
 				then
@@ -173,19 +173,19 @@ sudo echo Warten > $checkfile_watchdog
 
 # im Watchdog-Script den selben Pfad zum Checkfile eintragen wie in diesem Script
 sudo sed -i "/checkfile_watchdog=/c checkfile_watchdog=$checkfile_watchdog" $scriptfile_watchdog
-sleep 1
+sleep 0.2
 
 # das Watchdog-Script soll auch im selben Verzeichnis sein LOG ablegen, wie das Hauptscript
 sudo sed -i "/logfile_watchdog=/c logfile_watchdog="$folder_logpath"watchdog_openvpn_reconnect.log" $scriptfile_watchdog
-sleep 1
+sleep 0.2
 
 # das Watchdog-Script soll auch wissen, in welchem Pfad dieses Script die LOG's ablegt
 sudo sed -i "/folder_logpath=/c folder_logpath="$folder_logpath"" $scriptfile_watchdog
-sleep 1
+sleep 0.2
 
 # den Watchdog-Service neustarten, damit dieser den neuen Pfad kennt und fehlerfrei laeuft
 kill_watchdog_process
-sleep 5
+sleep 2
 
 # wir benötigen das vorhandene Logverzeichnis, dieses anlegen, falls nicht schon vorhanden
 sudo mkdir $folder_logpath
