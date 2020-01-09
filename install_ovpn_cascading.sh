@@ -102,7 +102,7 @@ FILE_DL_CASC_SCR=($(echo $DL_CASC_SCR | rev | cut -d '/' -f 1 | rev))
 systemctl stop openvpn-restart-cascading.service > /dev/null
 systemctl stop openvpn-restart-cascading-watchdog.service > /dev/null
 
-sleep 5
+sleep 2
 
 # die Dateien in den Zielverzeichnissen ablegen
 mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_PRIM_SCR $scriptpath
