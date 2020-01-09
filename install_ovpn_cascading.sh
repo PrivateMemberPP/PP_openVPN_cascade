@@ -28,6 +28,9 @@ DL_CASC_SCR=https://www.perfect-privacy.com/downloads/updown.sh
 #
 ### ENDE Variablen deklarieren
 
+printf "\n\nScript zur Installation der automatischen PP openVPN Kaskadierungsdienste"
+printf "\n-------------------------------------------------------------------------\n\n"
+
 # Paketdaten und Repository aktualisieren
 apt-get update -qq
 
@@ -38,7 +41,7 @@ dpkg-query -l | grep -w "tmux" > /dev/null
 if [ $? -eq "1" ];
 then
 	apt-get install tmux -qq > /dev/null
-	printf "\n==> tmux installiert!\n"
+	printf "==> tmux installiert!\n"
 fi
 
 # pruefen, ob 'openvpn-client' installiert ist -> falls nein, installieren!
