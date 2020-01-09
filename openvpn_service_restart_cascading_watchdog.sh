@@ -71,7 +71,7 @@ do
 			sleep 5
 		else
 			sleep 5
-			echo -e '\n''\n'Checkfile existiert seit':''\t''\t'$(date) >> $logfile_watchdog
+			echo -e '\n''\n'Verbindung besteht seit':''\t''\t'$(date) >> $logfile_watchdog
 			echo -e mit Ausgangsknoten':''\t''\t''\t'$current_state >> $logfile_watchdog
 			sleep 5
 
