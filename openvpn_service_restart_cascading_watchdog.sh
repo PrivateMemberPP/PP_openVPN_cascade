@@ -40,7 +40,7 @@ function cleanup {
 	sudo killall openvpn
 	sleep 2
 	sudo tmux kill-server
-	sleep 2
+	sleep 0.5
 }
 function kill_primary_process {
 	cleanup
