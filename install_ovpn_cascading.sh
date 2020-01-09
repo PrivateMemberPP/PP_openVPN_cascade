@@ -99,13 +99,13 @@ wget -q -P $curdir'/OVPN_SWITCH/' $DL_CASC_SCR > /dev/null
 FILE_DL_CASC_SCR=($(echo $DL_CASC_SCR | rev | cut -d '/' -f 1 | rev))
 
 # falls ein Update durchgefuehrt wird, erstmal die Dienste beenden
-systemctl --full --type service --all | grep openvpn-restart-cascading.service > /dev/null
+systemctl --full --type service --all | grep -q openvpn-restart-cascading.service
 if [ $? -eq "0" ];
 then
 	systemctl stop openvpn-restart-cascading.service > /dev/null
 fi
 
-systemctl --full --type service --all | grep openvpn-restart-cascading-watchdog.service > /dev/null
+systemctl --full --type service --all | grep -q openvpn-restart-cascading-watchdog.service
 if [ $? -eq "0" ];
 then
 	systemctl stop openvpn-restart-cascading-watchdog.service > /dev/null
