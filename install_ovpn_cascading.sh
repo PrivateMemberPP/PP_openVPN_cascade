@@ -38,7 +38,7 @@ dpkg-query -l | grep -w "tmux" > /dev/null
 if [ $? -eq "1" ];
 then
 	apt-get install tmux -qq > /dev/null
-	printf "\n==> tmux installiert!\n\n"
+	printf "==> tmux installiert!\n"
 fi
 
 # pruefen, ob 'openvpn-client' installiert ist -> falls nein, installieren!
@@ -47,7 +47,7 @@ dpkg-query -l | grep -w "openvpn" > /dev/null
 if [ $? -eq "1" ];
 then
 	apt-get install openvpn -qq > /dev/null
-	printf "\n==> openvpn installiert!\n\n"
+	printf "==> openvpn installiert!\n"
 fi
 
 # pruefen, ob 'resolvconf' installiert ist -> falls nein, installieren!
@@ -56,7 +56,7 @@ dpkg-query -l | grep -w "resolvconf" > /dev/null
 if [ $? -eq "1" ];
 then
 	apt-get install resolvconf -qq > /dev/null
-	printf "\n==> resolvconf installiert!\n\n"
+	printf "==> resolvconf installiert!\n"
 fi
 
 # pruefen, ob 'psmisc' installiert ist -> falls nein, installieren!
@@ -65,7 +65,7 @@ dpkg-query -l | grep -w "psmisc" > /dev/null
 if [ $? -eq "1" ];
 then
 	apt-get install psmisc -qq > /dev/null
-	printf "\n==> psmisc installiert!\n\n"
+	printf "==> psmisc installiert!\n"
 fi
 
 # pruefen, ob 'bc' installiert ist -> falls nein, installieren!
@@ -74,7 +74,7 @@ dpkg-query -l | grep -w "bc" > /dev/null
 if [ $? -eq "1" ];
 then
 	apt-get install bc -qq > /dev/null
-	printf "\n==> bc installiert!\n\n"
+	printf "==> bc installiert!\n\n"
 fi
 
 ### notwendige Pakete installiert
