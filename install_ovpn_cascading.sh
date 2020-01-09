@@ -29,7 +29,7 @@ DL_CASC_SCR=https://www.perfect-privacy.com/downloads/updown.sh
 ### ENDE Variablen deklarieren
 
 # Paketdaten und Repository aktualisieren
-apt-get update
+apt-get update-qq
 
 ### notwendige Pakete installieren
 # pruefen, ob 'tmux' installiert ist -> falls nein, installieren!
@@ -38,7 +38,7 @@ dpkg-query -l | grep -w "tmux" > /dev/null
 if [ $? -eq "1" ];
 then
 	apt-get install tmux -qq > /dev/null
-	printf "==> tmux installiert!\n"
+	printf "\n==> tmux installiert!\n"
 fi
 
 # pruefen, ob 'openvpn-client' installiert ist -> falls nein, installieren!
@@ -142,7 +142,7 @@ path_ovpn_conf=($(grep 'path_ovpn_conf=' $scriptpath'/'$FILE_DL_PRIM_SCR | rev |
 folder_logpath=($(grep 'folder_logpath=' $scriptpath'/'$FILE_DL_PRIM_SCR | rev | cut -d '=' -f 1 | rev))
 eval mkdir -p $path_ovpn_conf
 
-printf "\n\n------------------------------------------------"
+printf "\n------------------------------------------------"
 printf "\nInstallation ERFOLGREICH abgeschlossen!"
 printf "\nInstallierte Dienste noch NICHT gestartet!"
 printf "\n------------------------------------------------"
