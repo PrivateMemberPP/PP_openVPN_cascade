@@ -34,7 +34,7 @@ function check_inactivity {
 function check_state {
 	wget -q -O - https://checkip.perfect-privacy.com/csv | grep -i $current_state >> /dev/null
 	RET=$?
-	sleep 10
+	sleep 8
 }
 function cleanup {
 	sudo killall openvpn
@@ -45,7 +45,7 @@ function cleanup {
 function kill_primary_process {
 	cleanup
 	PID=$(sudo systemctl --property="MainPID" show openvpn-restart-cascading.service | cut -d '=' -f 2)
-	sleep 0.5
+	sleep 0.2
 	sudo kill -9 -$( ps opgid= $PID | tr -d ' ' )
 }
 #
