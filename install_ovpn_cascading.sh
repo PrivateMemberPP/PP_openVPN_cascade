@@ -33,7 +33,7 @@ apt-get update
 
 ### notwendige Pakete installieren
 # pruefen, ob 'tmux' installiert ist -> falls nein, installieren!
-dpkg-query -l | grep tmux > /dev/null
+dpkg-query -l | grep -w "tmux" > /dev/null
 
 if [ $? -eq "1" ];
 then
@@ -42,7 +42,7 @@ then
 fi
 
 # pruefen, ob 'openvpn-client' installiert ist -> falls nein, installieren!
-dpkg-query -l | grep openvpn > /dev/null
+dpkg-query -l | grep -w "openvpn" > /dev/null
 
 if [ $? -eq "1" ];
 then
@@ -51,7 +51,7 @@ then
 fi
 
 # pruefen, ob 'resolvconf' installiert ist -> falls nein, installieren!
-dpkg-query -l | grep resolvconf > /dev/null
+dpkg-query -l | grep -w "resolvconf" > /dev/null
 
 if [ $? -eq "1" ];
 then
@@ -60,7 +60,7 @@ then
 fi
 
 # pruefen, ob 'psmisc' installiert ist -> falls nein, installieren!
-dpkg-query -l | grep psmisc > /dev/null
+dpkg-query -l | grep -w "psmisc" > /dev/null
 
 if [ $? -eq "1" ];
 then
@@ -69,7 +69,7 @@ then
 fi
 
 # pruefen, ob 'bc' installiert ist -> falls nein, installieren!
-dpkg-query -l | grep bc > /dev/null
+dpkg-query -l | grep -w "bc" > /dev/null
 
 if [ $? -eq "1" ];
 then
