@@ -28,10 +28,6 @@ DL_CASC_SCR=https://www.perfect-privacy.com/downloads/updown.sh
 #
 ### ENDE Variablen deklarieren
 
-# falls ein Update durchgefuehrt wird, erstmal die Dienste beenden
-systemctl stop openvpn-restart-cascading.service
-systemctl stop openvpn-restart-cascading-watchdog.service
-
 # Paketdaten und Repository aktualisieren
 apt-get update
 
@@ -88,6 +84,12 @@ wget -q -P $curdir'/OVPN_SWITCH/' $DL_WATC_SRV > /dev/null
 FILE_DL_WATC_SRV=($(echo $DL_WATC_SRV | rev | cut -d '/' -f 1 | rev))
 wget -q -P $curdir'/OVPN_SWITCH/' $DL_CASC_SCR > /dev/null
 FILE_DL_CASC_SCR=($(echo $DL_CASC_SCR | rev | cut -d '/' -f 1 | rev))
+
+# falls ein Update durchgefuehrt wird, erstmal die Dienste beenden
+systemctl stop openvpn-restart-cascading.service
+systemctl stop openvpn-restart-cascading-watchdog.service
+
+sleep 5
 
 # die Dateien in den Zielverzeichnissen ablegen
 mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_PRIM_SCR $scriptpath
