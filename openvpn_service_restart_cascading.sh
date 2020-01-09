@@ -104,7 +104,7 @@ function vpn_connect_initial_one {
 	# warten, bis der Suchstring im Anschluss der erfolgreichen Verbindung gefunden wurde
 	until grep 'Initialization Sequence Completed' "$folder_logpath"'log.vpnhop'"$[$hopnr+1]" >> /dev/null;
 	do
-		sleep 1;
+		sleep 0.2;
 
 		if [ $errorcount -eq $inc_timeout ];
 		then
@@ -112,7 +112,7 @@ function vpn_connect_initial_one {
 			sudo echo Warten > $checkfile_watchdog
 			kill_primary_process
 		fi
-		errorcount=$((errorcount+1))
+		errorcount=$(echo "$errorcount+0.2" | bc)
 	done
 	# Verbindung erfolgreich aufgebaut
 	echo -e VPN-Verbindung Nr. "$[$hopnr+1]" erfolgreich aufgebaut nach':''\t'"$server_name"'\n' >> $logfile_script
@@ -142,7 +142,7 @@ function vpn_connect_following_n {
 			# warten, bis der Suchstring im Anschluss der erfolgreichen Verbindung gefunden wurde
 			until grep 'Initialization Sequence Completed' "$folder_logpath"'log.vpnhop'"$[$hopnr+1]" >> /dev/null;
 			do
-				sleep 1;
+				sleep 0.2;
 
 				if [ $errorcount -eq $inc_timeout ];
 				then
@@ -150,7 +150,7 @@ function vpn_connect_following_n {
 					sudo echo Warten > $checkfile_watchdog
 					kill_primary_process
 				fi
-				errorcount=$((errorcount+1))
+				errorcount=$(echo "$errorcount+0.2" | bc)
 			done
 
 			# Verbindung erfolgreich aufgebaut
