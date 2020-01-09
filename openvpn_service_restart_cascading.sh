@@ -221,6 +221,9 @@ do
 	# Endtime vorerst zuruecksetzen, damit die Schleife aufgerufen wird
 	endtim_sec=0
 
+	# Flag setzen welches mitteilt, dass KEINE Verbindung zu Beginn der Schleife besteht
+	connected_check=0
+
 	# Dauer der Verbindung ermitteln
 	timer=$(shuf -i "$mintime"-"$maxtime" -n 1)
 
@@ -246,22 +249,29 @@ do
 			sleep 10
 			get_cur_tim
 		else
-			# alle Standort-Configs in einem Array ablegen
-			ermittle_server
-			# nun sind saemtliche Standort-Configs im Array
+			if [ $connected_check -eq "0" ];
+			then
+				# alle Standort-Configs in einem Array ablegen
+				ermittle_server
+				# nun sind saemtliche Standort-Configs im Array
 
-			# Erstmal die initiale Verbindung herstellen
-			vpn_connect_initial_one
-			# Initiale Verbindung steht
+				# Erstmal die initiale Verbindung herstellen
+				vpn_connect_initial_one
+				# Initiale Verbindung steht
 
-			# sollen nun weitere Verbindungen aufgebaut werden?
-			# Falls maxhop > 1, dann los!
-			vpn_connect_following_n
+				# sollen nun weitere Verbindungen aufgebaut werden?
+				# Falls maxhop > 1, dann los!
+				vpn_connect_following_n
 
-			get_end_tim
+				get_end_tim
 
-			echo -e Verbindungsstart':''\t'$(date) >> $logfile_script
-			echo -e Verbindungsende':''\t'$endtim_dat >> $logfile_script
+				echo -e Verbindungsstart':''\t'$(date) >> $logfile_script
+				echo -e Verbindungsende':''\t'$endtim_dat >> $logfile_script
+				connected_check=1
+			else
+				echo -e '\n'Verbindungsproblem'!''\n'Warten auf Watchdog-Dienst, bis Prozesse neugestartet werden'!' >> $logfile_script
+				sleep 20
+			fi
 		fi
 	done
 	# raus aus der Schleife, da der Countdown abgelaufen ist, nun muessen die neuen Verbindungen aufgebaut werden
