@@ -165,4 +165,8 @@ printf "\nDienstverwaltung über folgende Befehle:"
 printf "\n\t- sudo systemctl start/stop/restart openvpn-restart-cascading.service"
 printf "\n\t- sudo systemctl start/stop/restart openvpn-restart-cascading-watchdog.service"
 printf "\n\nNach dem Neustart befindet sich das Logverzeichnis hier: $folder_logpath"
+
+printf "\n\nMoechtest du meine Arbeit unterstuetzen?"
+printf "\nUeber eine kleine Donation an folgende PayPal.me-Adresse wuerde ich mich sehr freuen:"
+printf "\n\nhttps://www.paypal.com/paypalme2/patricklwl"
 printf "\n\n------------------------------------------------\n\n"
