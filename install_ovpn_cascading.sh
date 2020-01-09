@@ -29,7 +29,7 @@ DL_CASC_SCR=https://www.perfect-privacy.com/downloads/updown.sh
 ### ENDE Variablen deklarieren
 
 # Paketdaten und Repository aktualisieren
-apt-get update-qq
+apt-get update -qq
 
 ### notwendige Pakete installieren
 # pruefen, ob 'tmux' installiert ist -> falls nein, installieren!
