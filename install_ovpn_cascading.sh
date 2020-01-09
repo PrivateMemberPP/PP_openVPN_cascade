@@ -83,7 +83,7 @@ fi
 curdir="${PWD}"
 
 # Arbeitsverzeichnis erstellen
-mkdir $curdir'/'OVPN_SWITCH
+mkdir $curdir'/'OVPN_SWITCH > /dev/null
 
 # Download der benoetigten Dateien
 # Dateinamen in variablen speichern
