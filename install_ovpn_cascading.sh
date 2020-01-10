@@ -168,5 +168,5 @@ printf "\n\nNach dem Neustart befindet sich das Logverzeichnis hier: $folder_log
 
 printf "\n\nMoechtest du meine Arbeit unterstuetzen?"
 printf "\nUeber eine kleine Donation an folgende PayPal.me-Adresse wuerde ich mich sehr freuen:"
-printf "\n\nhttps://www.paypal.com/paypalme2/patricklwl"
+printf "\n\nhttps://www.paypal.me/patricklwl"
 printf "\n\n------------------------------------------------\n\n"
