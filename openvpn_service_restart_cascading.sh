@@ -77,7 +77,7 @@ function double_time {
 	inc_timeout=`expr $inc_timeout \* 2`
 }
 function write_timestamp {
-	echo -e Es ist jetzt':' $(date) >> $logfile_script
+	echo -e Es ist jetzt':''\t''\t'$(date) >> $logfile_script
 }
 function get_cur_tim {
 	curtim_dat=$(date +"%Y-%m-%dT%H:%M:%S")
