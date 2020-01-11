@@ -269,6 +269,7 @@ do
 				echo -e Verbindungsende':''\t'$endtim_dat >> $logfile_script
 				connected_check=1
 			else
+				write_timestamp
 				echo -e '\n'Verbindungsproblem'!''\n'Warten auf Watchdog-Dienst, bis Prozesse neugestartet werden'!' >> $logfile_script
 				sleep 20
 			fi
