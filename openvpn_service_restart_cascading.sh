@@ -77,7 +77,7 @@ function double_time {
 	inc_timeout=`expr $inc_timeout \* 2`
 }
 function write_timestamp {
-	echo -e '\n'Es ist jetzt':' $(date) >> $logfile_script
+	echo -e Es ist jetzt':' $(date) >> $logfile_script
 }
 function get_cur_tim {
 	curtim_dat=$(date +"%Y-%m-%dT%H:%M:%S")
@@ -269,9 +269,10 @@ do
 				echo -e Verbindungsende':''\t'$endtim_dat >> $logfile_script
 				connected_check=1
 			else
-				echo -e '\n'Verbindungsproblem'!' >> $logfile_script
+				echo -e '\n''\n\'Verbindungsproblem'!' >> $logfile_script
+				echo -e '\n'------------------- >> $logfile_script
 				write_timestamp
-				echo -e Warten auf Watchdog-Dienst, bis Prozesse neugestartet werden'!' >> $logfile_script
+				echo -e '\n'Warten auf Watchdog-Dienst, bis Prozesse neugestartet werden'!' >> $logfile_script
 				sleep 20
 			fi
 		fi
