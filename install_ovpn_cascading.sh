@@ -127,8 +127,8 @@ fi
 
 sleep 2
 
-# die Dateien in den Zielverzeichnissen ablegen und zuvor prüfen, ob die Scripte schon vorhanden sind
-# falls die Scripte vorhanden sind, die Variablen zuvor in die neuen Scripte uebernehmen
+# die Dateien in den Zielverzeichnissen ablegen und zuvor prüfen, ob das Hauptscript schon vorhanden ist (im Falle eines Updates)
+# falls vorhanden, die Variablen zuvor in das neuen, heruntergeladene Script erst uebernehmen
 if [[ -f "$scriptpath/$FILE_DL_PRIM_SCR" ]];
 then
 	cur_folder_logpath=($(grep -m 1 "folder_logpath=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
