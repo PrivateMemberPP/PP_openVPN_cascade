@@ -28,6 +28,16 @@ DL_CASC_SCR=https://www.perfect-privacy.com/downloads/updown.sh
 #
 ### ENDE Variablen deklarieren
 
+### Funktionen ###
+function search_and_replace {
+	line_num=($(grep -n -m 1 $1 $2 | cut -d':' -f 1))
+	sed -i ""$line_num"s#.*#"$3"#" $4
+}
+### ENDE Funktionen ###
+
+# Bildschirm leeren
+clear
+
 printf "\n\nScript zur Installation der automatischen PP openVPN Kaskadierungsdienste"
 printf "\n-------------------------------------------------------------------------\n\n"
 printf "... der Vorgang dauert weniger als eine Minute.\n\n"
@@ -116,6 +126,44 @@ then
 fi
 
 sleep 2
+
+# die Dateien in den Zielverzeichnissen ablegen und zuvor prüfen, ob die Scripte schon vorhanden sind
+# falls die Scripte vorhanden sind, die Variablen zuvor in die neuen Scripte uebernehmen
+if [[ -f "$scriptpath/$FILE_DL_PRIM_SCR" ]];
+then
+	cur_folder_logpath=($(grep -m 1 "folder_logpath=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace folder_logpath= $scriptpath/$FILE_DL_PRIM_SCR $cur_folder_logpath $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+
+	cur_logfile_script=($(grep -m 1 "logfile_script=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace logfile_script= $scriptpath/$FILE_DL_PRIM_SCR $cur_logfile_script $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+
+	cur_path_ovpn_conf=($(grep -m 1 "path_ovpn_conf=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace path_ovpn_conf= $scriptpath/$FILE_DL_PRIM_SCR $cur_path_ovpn_conf $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+
+	cur_path_ovpn_cascade_script=($(grep -m 1 "path_ovpn_cascade_script=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace path_ovpn_cascade_script= $scriptpath/$FILE_DL_PRIM_SCR $cur_path_ovpn_cascade_script $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+
+	cur_checkfile_watchdog=($(grep -m 1 "checkfile_watchdog=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace checkfile_watchdog= $scriptpath/$FILE_DL_PRIM_SCR $cur_checkfile_watchdog $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+
+	cur_scriptfile_watchdog=($(grep -m 1 "scriptfile_watchdog=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace scriptfile_watchdog= $scriptpath/$FILE_DL_PRIM_SCR $cur_scriptfile_watchdog $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+
+	cur_mintime=($(grep -m 1 "mintime=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace mintime= $scriptpath/$FILE_DL_PRIM_SCR $cur_mintime $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+
+	cur_maxtime=($(grep -m 1 "maxtime=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace maxtime= $scriptpath/$FILE_DL_PRIM_SCR $cur_maxtime $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+
+	cur_maxhop=($(grep -m 1 "maxhop=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace maxhop= $scriptpath/$FILE_DL_PRIM_SCR $cur_maxhop $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+
+	cur_timeoutcount=($(grep -m 1 "timeoutcount=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace timeoutcount= $scriptpath/$FILE_DL_PRIM_SCR $cur_timeoutcount $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+
+	cur_logdelete_count=($(grep -m 1 "logdelete_count=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace logdelete_count= $scriptpath/$FILE_DL_PRIM_SCR $cur_logdelete_count $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+fi
 
 # die Dateien in den Zielverzeichnissen ablegen
 mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_PRIM_SCR $scriptpath
