@@ -35,6 +35,9 @@ function search_and_replace {
 }
 ### ENDE Funktionen ###
 
+# grundsaetzlich davon ausgehen, dass KEIN Update durchgefuehrt wird
+update_check=0
+
 # Bildschirm leeren
 clear
 
@@ -131,6 +134,8 @@ sleep 2
 # falls vorhanden, die Variablen zuvor in das neuen, heruntergeladene Script erst uebernehmen
 if [[ -f "$scriptpath/$FILE_DL_PRIM_SCR" ]];
 then
+	update_check=1
+
 	cur_folder_logpath=($(grep -m 1 "folder_logpath=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
 	search_and_replace folder_logpath= $scriptpath/$FILE_DL_PRIM_SCR $cur_folder_logpath $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
 
@@ -190,29 +195,49 @@ systemctl enable $FILE_DL_WATC_SRV
 rm -r $curdir'/'OVPN_SWITCH
 
 # Statusausgabe
-path_ovpn_conf=($(grep 'path_ovpn_conf=' $scriptpath'/'$FILE_DL_PRIM_SCR | rev | cut -d '=' -f 1 | rev))
-folder_logpath=($(grep 'folder_logpath=' $scriptpath'/'$FILE_DL_PRIM_SCR | rev | cut -d '=' -f 1 | rev))
-eval mkdir -p $path_ovpn_conf
 
-printf "\n------------------------------------------------"
-printf "\nInstallation ERFOLGREICH abgeschlossen!"
-printf "\nInstallierte Dienste noch NICHT gestartet!"
-printf "\n------------------------------------------------"
-printf "\n\nPerfectPrivacy Konfigurationen bitte im folgenden Verzeichnis hinterlegen:\n==> $path_ovpn_conf"
-printf "\nHinweis: es werden saemtliche Konfigurationen (*.conf) verwendet, welche sich in diesem Verzeichnis befinden!"
-printf "\n\nWeitere Schritte notwendig!"
-printf "\n---------------------------"
-printf "\nBitte folgende Anleitung aufrufen:\n==> https://www.perfect-privacy.com/de/manuals/linux_openvpn_terminal"
-printf "\nEs muessen, laut dieser Anleitung, lediglich noch folgende Schritte ausgefuehrt werden:"
-printf "\n\t- Herunterladen der PerfectPrivacy Konfigurationen"
-printf "\n\t- Erstellen der 'password.txt' und anschließendes eintragen der Anmeldedaten"
-printf "\n\t- Die 'password.txt' in den heruntergeladenen Konfigurationen eintragen"
-printf "\n\t- Neustarten, damit die soeben installierten Dienste gestartet werden"
-printf "\n\nDie Dienste heißen 'openvpn-restart-cascading.service' und 'openvpn-restart-cascading-watchdog.service'"
-printf "\nDienstverwaltung über folgende Befehle:"
-printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading.service"
-printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading-watchdog.service"
-printf "\n\nNach dem Neustart befindet sich das Logverzeichnis hier: $folder_logpath"
+path_ovpn_conf=($(grep -m 1 'path_ovpn_conf=' $scriptpath'/'$FILE_DL_PRIM_SCR | rev | cut -d '=' -f 1 | rev))
+folder_logpath=($(grep -m 1 'folder_logpath=' $scriptpath'/'$FILE_DL_PRIM_SCR | rev | cut -d '=' -f 1 | rev))
+
+if [ $update_check -eq "1" ];
+then
+	printf "\n------------------------------------------------"
+	printf "\nUpdate ERFOLGREICH abgeschlossen!"
+	printf "\nDienste werden wieder gestartet!"
+	printf "\n------------------------------------------------"
+	printf "\n\nPerfectPrivacy Konfigurationen befinden sich weiterhin im folgenden Verzeichnis:\n==> $path_ovpn_conf"
+	printf "\nHinweis: es werden saemtliche Konfigurationen (*.conf) verwendet, welche sich in diesem Verzeichnis befinden!"
+	printf "\n\nKEINE weitere Schritte notwendig!"
+	printf "\n---------------------------------"
+
+	printf "\nDienstverwaltung über folgende Befehle:"
+	printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading.service"
+	printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading-watchdog.service"
+
+	systemctl start openvpn-restart-cascading.service > /dev/null
+	systemctl start openvpn-restart-cascading-watchdog.service > /dev/null
+else
+	eval mkdir -p $path_ovpn_conf
+	printf "\n------------------------------------------------"
+	printf "\nInstallation ERFOLGREICH abgeschlossen!"
+	printf "\nInstallierte Dienste noch NICHT gestartet!"
+	printf "\n------------------------------------------------"
+	printf "\n\nPerfectPrivacy Konfigurationen bitte im folgenden Verzeichnis hinterlegen:\n==> $path_ovpn_conf"
+	printf "\nHinweis: es werden saemtliche Konfigurationen (*.conf) verwendet, welche sich in diesem Verzeichnis befinden!"
+	printf "\n\nWeitere Schritte notwendig!"
+	printf "\n---------------------------"
+	printf "\nBitte folgende Anleitung aufrufen:\n==> https://www.perfect-privacy.com/de/manuals/linux_openvpn_terminal"
+	printf "\nEs muessen, laut dieser Anleitung, lediglich noch folgende Schritte ausgefuehrt werden:"
+	printf "\n\t- Herunterladen der PerfectPrivacy Konfigurationen"
+	printf "\n\t- Erstellen der 'password.txt' und anschließendes eintragen der Anmeldedaten"
+	printf "\n\t- Die 'password.txt' in den heruntergeladenen Konfigurationen eintragen"
+	printf "\n\t- Neustarten, damit die soeben installierten Dienste gestartet werden"
+	printf "\n\nDie Dienste heißen 'openvpn-restart-cascading.service' und 'openvpn-restart-cascading-watchdog.service'"
+	printf "\nDienstverwaltung über folgende Befehle:"
+	printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading.service"
+	printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading-watchdog.service"
+	printf "\n\nNach dem Neustart befindet sich das Logverzeichnis hier: $folder_logpath"
+fi
 
 printf "\n\nMoechtest du meine Arbeit unterstuetzen?"
 printf "\nUeber eine kleine Donation an folgende PayPal.me-Adresse wuerde ich mich sehr freuen:"
