@@ -210,8 +210,8 @@ printf "\n\t- Die 'password.txt' in den heruntergeladenen Konfigurationen eintra
 printf "\n\t- Neustarten, damit die soeben installierten Dienste gestartet werden"
 printf "\n\nDie Dienste heißen 'openvpn-restart-cascading.service' und 'openvpn-restart-cascading-watchdog.service'"
 printf "\nDienstverwaltung über folgende Befehle:"
-printf "\n\t- sudo systemctl start/stop/restart openvpn-restart-cascading.service"
-printf "\n\t- sudo systemctl start/stop/restart openvpn-restart-cascading-watchdog.service"
+printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading.service"
+printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading-watchdog.service"
 printf "\n\nNach dem Neustart befindet sich das Logverzeichnis hier: $folder_logpath"
 
 printf "\n\nMoechtest du meine Arbeit unterstuetzen?"
