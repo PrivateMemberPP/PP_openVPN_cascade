@@ -188,7 +188,10 @@ kill_watchdog_process
 sleep 2
 
 # wir benötigen das vorhandene Logverzeichnis, dieses anlegen, falls nicht schon vorhanden
-sudo mkdir $folder_logpath
+if [[ ! -f "$folder_logpath" ]];
+then
+	sudo mkdir $folder_logpath
+fi
 
 # Anzahl maximaler HOP's in das Perfect-Privacy-Script uebernehmen
 sudo sed -i "/MAX_HOPID=/c MAX_HOPID=$maxhop" $path_ovpn_cascade_script
