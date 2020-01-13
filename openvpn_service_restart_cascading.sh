@@ -5,7 +5,7 @@
 # Pfad zur Ablage saemtlicher Logfiles dieses Scripts
 folder_logpath=/var/log/ovpn_reconnect/
 #
-# Logfilename für dieses Script (nur den Namen anpassen!)
+# Logfilename fuer dieses Script (nur den Namen anpassen!)
 logfile_script="$folder_logpath"vpnlog_restart.log
 #
 # Pfad zu den OpenVPN-Configs, welche genutzt werden sollen
@@ -31,10 +31,10 @@ maxhop=3
 #
 # Timeout-Counter (in Sekunden) zum Verbindungsaufbau (Wert wird je HOP verdoppelt)
 # Bei einem Wert von '10' somit HOP1: 10; HOP2: 20; HOP3: 40; HOP4: 80 usw...
-timeoutcount=20
+timeoutcount=25
 #
 # LOGDELETE: Nach wie vielen -erfolgreichen- neuen VPN-Verbindungen soll das LOG geloescht werden? (Schutz, damit dieses nicht den Speicher unendlich vollschreibt)
-logdelete_count=20
+logdelete_count=5
 #
 ### ENDE Variablen deklarieren ###
 
@@ -45,9 +45,11 @@ function cleanup {
 	sleep 2
 	sudo tmux kill-server
 	sleep 0.5
-	if [[ -f ""$folder_logpath"log.vpnhop*" ]];
+
+	eval ls "$folder_logpath"'log.vpnhop*' > /dev/null
+	if [ $? -eq "0" ];
 	then
-		eval sudo rm "$folder_logpath"log.vpnhop*
+		sudo rm "$folder_logpath"log.vpnhop*
 		sleep 0.2
 	fi
 }
@@ -79,6 +81,11 @@ function remux_server_list {
 function double_time {
 	inc_timeout=`expr $inc_timeout \* 2`
 }
+function get_last_gw {
+	# das Gateway der vorherigen Verbindung ermitteln
+	gw_vorheriger_hop=$(grep 'VPN: gateway:' "$folder_logpath"'log.vpnhop'"$[$hopnr-1]" | sed -e 's/^.\{,36\}//')
+	# letztes Gateway wurde ermittelt und in eine Variable gespeichert
+}
 function write_timestamp {
 	echo -e Es ist jetzt':''\t''\t'$(date) >> $logfile_script
 }
@@ -93,78 +100,44 @@ function get_end_tim {
 	endtim_dat=$(date -d @$endtim_sec +"%a %e. %b %H:%M:%S %Z %Y")
 }
 function vpn_connect_initial_one {
-	cleanup
-	hopnr=0
-	errorcount=0
-
-	# Verbindung mit HOP-1 aufbauen
-	# Einen Server aus dem Array picken, diesen aus dem Array entfernen und Array konsolidieren
-	remux_server_list
-
-	echo -e '\n'VPN-Verbindung Nr. "$[$hopnr+1]" wird aufgebaut nach':''\t''\t'"$server_name" >> $logfile_script
-	sudo tmux new -d -s vpnhop$[$hopnr+1] openvpn --config $path_ovpn_conf"$naechster_server" --script-security 2 --route remote_host --persist-tun --up $path_ovpn_cascade_script --down $path_ovpn_cascade_script --route-noexec \; pipe-pane -o "cat > "$folder_logpath"'log.#S'"
+	echo -e '\n'VPN-Verbindung Nr. "$[$hopnr]" wird aufgebaut nach':''\t''\t'"$server_name" >> $logfile_script
+	sudo tmux new -d -s vpnhop$[$hopnr] openvpn --config $path_ovpn_conf"$naechster_server" --script-security 2 --route remote_host --persist-tun --up $path_ovpn_cascade_script --down $path_ovpn_cascade_script --route-noexec \; pipe-pane -o "cat > "$folder_logpath"'log.#S'"
 
 	# warten, bis der Suchstring im Anschluss der erfolgreichen Verbindung gefunden wurde
-	until grep 'Initialization Sequence Completed' "$folder_logpath"'log.vpnhop'"$[$hopnr+1]" >> /dev/null;
+	until grep 'Initialization Sequence Completed' "$folder_logpath"'log.vpnhop'"$[$hopnr]" >> /dev/null;
 	do
 		sleep 0.2;
 
 		if (( $(echo "$errorcount > $inc_timeout" | bc -l) ));
 		then
-			echo -e TIMEOUT':' Verbindung zu HOP Nr. $[$hopnr+1] NICHT erfolgreich, nun von vorne beginnen'!' >> $logfile_script
+			echo -e TIMEOUT':' Verbindung zu HOP Nr. $[$hopnr] NICHT erfolgreich, nun von vorne beginnen'!' >> $logfile_script
 			sudo echo Warten > $checkfile_watchdog
 			kill_primary_process
 		fi
 		errorcount=$(echo "$errorcount+0.2" | bc)
 	done
 	# Verbindung erfolgreich aufgebaut
-	echo -e VPN-Verbindung Nr. "$[$hopnr+1]" erfolgreich aufgebaut nach':''\t'"$server_name"'\n' >> $logfile_script
+	echo -e VPN-Verbindung Nr. "$[$hopnr]" erfolgreich aufgebaut nach':''\t'"$server_name"'\n' >> $logfile_script
 }
 function vpn_connect_following_n {
-	errorcount=0
+	echo -e VPN-Verbindung Nr. "$[$hopnr]" wird aufgebaut nach':''\t''\t'"$server_name" >> $logfile_script
+	sudo tmux new -d -s vpnhop$[$hopnr] openvpn --config $path_ovpn_conf"$naechster_server" --script-security 2 --route remote_host --persist-tun --up $path_ovpn_cascade_script --down $path_ovpn_cascade_script --route-noexec --setenv hopid $[$hopnr] --setenv prevgw $gw_vorheriger_hop \; pipe-pane -o "cat > "$folder_logpath"'log.#S'"
 
-	# bei Bedarf, die Verbindungen zu den weiteren HOPs innerhalb eines Loops
-	if [ $maxhop -gt "1" ];
-	then
-		echo -e '==>' MaxHOP auf "$maxhop" festgelegt, nun folgen'/'folgt "$[$maxhop-1]" Verbindung'('en')''!''\n' >> $logfile_script
-		while [ $hopnr -lt $[$maxhop-1] ]
-		do
-			double_time
+	# warten, bis der Suchstring im Anschluss der erfolgreichen Verbindung gefunden wurde
+	until grep 'Initialization Sequence Completed' "$folder_logpath"'log.vpnhop'"$[$hopnr]" >> /dev/null;
+	do
+		sleep 0.2;
 
-			hopnr=$[$hopnr+1]
-			# erstmal das zuletzt erhaltene Gateway pruefen, um dieses fuer die zweite Verbindung zu uebergeben
-			gw_vorheriger_hop=$(grep 'VPN: gateway:' "$folder_logpath"'log.vpnhop'"$hopnr" | sed -e 's/^.\{,36\}//')
-			# letztes Gateway wurde ermittelt und in eine Variable gespeichert
-			echo -e Das Gateway von HOP Nr. $hopnr lautet':''\t''\t''\t'"$gw_vorheriger_hop"'\n' >> $logfile_script
-			# Verbindung mit naechsten HOP aufbauen
-
-			remux_server_list
-
-			echo -e VPN-Verbindung Nr. "$[$hopnr+1]" wird aufgebaut nach':''\t''\t'"$server_name" >> $logfile_script
-			sudo tmux new -d -s vpnhop$[$hopnr+1] openvpn --config $path_ovpn_conf"$naechster_server" --script-security 2 --route remote_host --persist-tun --up $path_ovpn_cascade_script --down $path_ovpn_cascade_script --route-noexec --setenv hopid $[$hopnr+1] --setenv prevgw $gw_vorheriger_hop \; pipe-pane -o "cat > "$folder_logpath"'log.#S'"
-			# warten, bis der Suchstring im Anschluss der erfolgreichen Verbindung gefunden wurde
-			until grep 'Initialization Sequence Completed' "$folder_logpath"'log.vpnhop'"$[$hopnr+1]" >> /dev/null;
-			do
-				sleep 0.2;
-
-				if (( $(echo "$errorcount > $inc_timeout" | bc -l) ));
-				then
-					echo -e TIMEOUT':' Verbindung zu HOP Nr. $[$hopnr+1] NICHT erfolgreich, nun von vorne beginnen'!' >> $logfile_script
-					sudo echo Warten > $checkfile_watchdog
-					kill_primary_process
-				fi
-				errorcount=$(echo "$errorcount+0.2" | bc)
-			done
-
-			# Verbindung erfolgreich aufgebaut
-			echo -e VPN-Verbindung Nr. "$[$hopnr+1]" erfolgreich aufgebaut nach':''\t'"$server_name"'\n' >> $logfile_script
-		done
-		echo -e Kaskade besteht jetzt'\n' >> $logfile_script
-		echo $server_name > $checkfile_watchdog
-	else
-		echo -e MaxHOP auf "$maxhop" festgelegt, keine weiteren Verbindungen benoetigt'!''\n' >> $logfile_script
-		echo $server_name > $checkfile_watchdog
-	fi
+		if (( $(echo "$errorcount > $inc_timeout" | bc -l) ));
+		then
+			echo -e TIMEOUT':' Verbindung zu HOP Nr. $[$hopnr] NICHT erfolgreich, nun von vorne beginnen'!' >> $logfile_script
+			sudo echo Warten > $checkfile_watchdog
+			kill_primary_process
+		fi
+		errorcount=$(echo "$errorcount+0.2" | bc)
+	done
+	# Verbindung zu HOP erfolgreich aufgebaut
+	echo -e VPN-Verbindung Nr. "$[$hopnr]" erfolgreich aufgebaut nach':''\t'"$server_name"'\n' >> $logfile_script
 }
 #
 ### ENDE Definition von Funktionen ###
@@ -190,7 +163,7 @@ sleep 0.2
 kill_watchdog_process
 sleep 2
 
-# wir benötigen das vorhandene Logverzeichnis, dieses anlegen, falls nicht schon vorhanden
+# wir benoetigen das vorhandene Logverzeichnis, dieses anlegen, falls nicht schon vorhanden
 if [[ ! -d "$folder_logpath" ]];
 then
 	sudo mkdir $folder_logpath
@@ -207,6 +180,7 @@ cleanup
 # Nun laufen keine VPN-Verbindungen und Terminals mehr + unnoetige LOG's geloescht
 
 # ueberpruefen, ob mehr Verbindungen erwuenscht sind, als Configs vorhanden
+# so wird auch schon Mal das Array mit saemtlichen Verbindungen angelegt
 ermittle_server
 
 if [ $maxhop -gt $server_list_count ];
@@ -224,6 +198,12 @@ fi
 ### Beginn aeussere Schleife - Endlosschleife ###
 while true
 do
+	# 'k' ist die Zaehlvariable fuer das Array, welches sich unsere Verbindungen merkt
+	k=0
+
+	# Aufraeumen, bevor es mit den Verbindungen losgeht
+	cleanup
+
 	# Endtime vorerst zuruecksetzen, damit die Schleife aufgerufen wird
 	endtim_sec=0
 
@@ -257,42 +237,91 @@ do
 		else
 			if [ $connected_check -eq "0" ];
 			then
-				# alle Standort-Configs in einem Array ablegen
-				ermittle_server
-				# nun sind saemtliche Standort-Configs im Array
+				hopnr=1
+				errorcount=0
 
-				# Erstmal die initiale Verbindung herstellen
+				# den ersten Server ermitteln und das Array konsolidieren
+				remux_server_list
+
+				# die initiale verbindung aufbauen
 				vpn_connect_initial_one
 				# Initiale Verbindung steht
 
+				# Servernamen der Verbindung in einem Array speichern
+				con_servers[$k]=$server_name
+				k=$((k+1))
+				hopnr=$[$hopnr+1]
+
 				# sollen nun weitere Verbindungen aufgebaut werden?
 				# Falls maxhop > 1, dann los!
-				vpn_connect_following_n
+				if [ $maxhop -gt "1" ];
+				then
+					echo -e '==>' MaxHOP auf "$maxhop" festgelegt, nun folgen'/'folgt "$[$maxhop-1]" Verbindung'('en')''!''\n' >> $logfile_script
 
+					while [ $hopnr -le $maxhop ]
+					do
+						errorcount=0
+
+						# wir benoetigen fuer die folgenden Verbindungen jeweils das vorherrige Gateway
+						get_last_gw
+
+						echo -e Das Gateway von HOP Nr. $hopnr lautet':''\t''\t''\t'"$gw_vorheriger_hop"'\n' >> $logfile_script
+
+						# jede weitere Verbindung soll eine Timeout-Verdopplung erhalten
+						double_time
+
+						# den jeweils naechsten Server ermitteln und im Anschluss das Array konsolidieren
+						remux_server_list
+
+						# nun die jeweils folgende Verbindung aufbauen
+						vpn_connect_following_n
+
+						# Servernamen der jeweiligen Verbindungen in einem Array speichern
+						con_servers[$k]='==>'
+						k=$((k+1))
+						con_servers[$k]=$server_name
+						k=$((k+1))
+						hopnr=$[$hopnr+1]
+					done
+				else
+					echo -e MaxHOP auf "$maxhop" festgelegt, keine weiteren Verbindungen benoetigt'!' >> $logfile_script
+				fi
+				echo $server_name > $checkfile_watchdog
+
+				if [ $maxhop -gt "1" ];
+				then
+					echo -e Kaskade besteht jetzt wie folgt':' >> $logfile_script
+					echo ${con_servers[*]} >> $logfile_script
+				fi
+
+				# ermitteln der Endzeit (Zeitpunkt JETZT + ermittelter Random-Wert)
 				get_end_tim
 
-				echo -e Verbindungsstart':''\t'$(date) >> $logfile_script
+				echo -e '\n''\n'Verbindungsstart':''\t'$(date) >> $logfile_script
 				echo -e Verbindungsende':''\t'$endtim_dat >> $logfile_script
+
+				# nun sind wir endgueltig verbunden und setzen als Merker ein Flag
 				connected_check=1
 			else
+				# falls das Flag fuer connected_check auf 1 gesetzt ist und wir hier rein rutschen, stimmt irgendetwas nicht
 				echo -e '\n''\n'Verbindungsproblem'!' >> $logfile_script
 				echo -e ------------------- >> $logfile_script
 				write_timestamp
 				echo -e '\n'Warten auf Watchdog-Dienst, bis Prozesse neugestartet werden'!' >> $logfile_script
 				sleep 20
+
+				# ACHTUNG: falls der Watchdog nicht laeuft, einfach ab hier beenden
+				exit 1
 			fi
 		fi
 	done
-	# raus aus der Schleife, da der Countdown abgelaufen ist, nun muessen die neuen Verbindungen aufgebaut werden
+	# raus aus der Schleife, da der Countdown abgelaufen ist, nun alles abbauen und danach wieder zum Schleifenanfang (aeussere Schleife) gehen
 	### ENDE innere Schleife ###
 
-	# nun dem Watchdog mitteilen, dass wieder bis zum naechsten Connect gewartet werden muss
+	# dem Watchdog mitteilen, dass wieder bis zum naechsten Connect gewartet werden muss
 	sudo echo Warten > $checkfile_watchdog
 
 	echo Zeit abgelaufen'!' Die Verbindungen werden jetzt abgebaut'!' >> $logfile_script
-
-	# alle VPN-Verbindungen beenden, damit Tunnel abgebaut werden
-	cleanup
 
 	# Counter zum leeren des LOG's inkrementieren
 	j=$((j+1))
@@ -305,7 +334,7 @@ do
 		# den Counter nun wieder zuruecksetzen
 		j=0
 	fi
-	# nun geht es wieder zurück zum Anfang der aeusseren Schleife
+	# nun geht es wieder zurueck zum Anfang der aeusseren Schleife
 
 done
 ### ENDE aeussere Schleife ###
