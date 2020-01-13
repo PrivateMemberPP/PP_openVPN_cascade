@@ -45,8 +45,10 @@ function cleanup {
 	sleep 2
 	sudo tmux kill-server
 	sleep 0.5
-	eval sudo rm "$folder_logpath"log.vpnhop*
-	sleep 0.2
+	if [[ -f ""$folder_logpath"log.vpnhop*" ]];
+		eval sudo rm "$folder_logpath"log.vpnhop*
+		sleep 0.2
+	fi
 }
 function kill_primary_process {
 	cleanup
@@ -188,7 +190,7 @@ kill_watchdog_process
 sleep 2
 
 # wir benötigen das vorhandene Logverzeichnis, dieses anlegen, falls nicht schon vorhanden
-if [[ ! -f "$folder_logpath" ]];
+if [[ ! -d "$folder_logpath" ]];
 then
 	sudo mkdir $folder_logpath
 fi
