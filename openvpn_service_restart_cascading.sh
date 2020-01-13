@@ -46,6 +46,7 @@ function cleanup {
 	sudo tmux kill-server
 	sleep 0.5
 	if [[ -f ""$folder_logpath"log.vpnhop*" ]];
+	then
 		eval sudo rm "$folder_logpath"log.vpnhop*
 		sleep 0.2
 	fi
