@@ -334,7 +334,9 @@ do
 		# den Counter nun wieder zuruecksetzen
 		j=0
 	fi
+	# das Array mit den gespeicherten Servern loeschen
+	unset con_servers
+	
 	# nun geht es wieder zurueck zum Anfang der aeusseren Schleife
-
 done
 ### ENDE aeussere Schleife ###
