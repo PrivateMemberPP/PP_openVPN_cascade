@@ -42,8 +42,29 @@ Im Anschluss werden die Dienste wieder gestartet.
 ## Steuerung 
 
 ### Dienstverwaltung
+Es gibt zwei Dienste für die folgenden Scripte:
+* Hauptscript
+* Watchdog-Script
+
+Steuerung des Hauptscripts über folgenden Dienstnamen:
+```
+openvpn-restart-cascading.service
+```
+
+Steuerung des Watchdog-Scripts über folgenden Dienstnamen:
+```
+openvpn-restart-cascading-watchdog.service
+```
 
 ### Variablen deklarieren
+Es müssen lediglich die Variablen am Anfang des Hauptscripts definiert werden.
+Sämtliche Variablen, welche für das Watchdog-Script abhängig sind, werden beim Start des Scripts/Dienstes automatisch übernommen.
+Im Anschluss wird immer der Watchdog-Dienste neugestartet.
+
+Das Hauptscript befindet sich hier:
+```
+/etc/systemd/system/openvpn_service_restart_cascading.sh
+```
 
 ## Built With
 
@@ -60,4 +81,3 @@ Möchtest du meine Arbeit unterstützen?
 Über eine kleine Donation an folgende PayPal.me-Adresse wuerde ich mich sehr freuen:
 
 [PayPal.me](https://www.paypal.me/patricklwl)
-
