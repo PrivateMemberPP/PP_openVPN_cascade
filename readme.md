@@ -4,7 +4,7 @@ Dieses Repository besteht aus insg. 3 Scripten und 2 Services welche ermögliche
 
 Durch Angabe einer maximalen Hopanzahl und einer min- sowie maxtime, können die Verbindungsparameter beinflusst werden.
 
-Innerhalb der Variablendeklaration können viel Parameter eigens angepasst werden.
+Innerhalb der Variablendeklaration können viele Parameter eigens angepasst werden.
 
 ## Durchführung
 
