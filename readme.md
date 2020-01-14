@@ -1,6 +1,6 @@
 # OpenVPN Kaskadierungs-Script für PerfectPrivacy
 
-Dieses Repository besteht aus insg. 3 Scripten und 2 Services welche ermöglichen, bei Nutzung des VPN-Anbieters 'PerfectPrivacy' (https://www.perfect-privacy.com), eine automatische Kaskadierung auszuführen
+Dieses Repository besteht aus insg. 3 Scripten und 2 Services welche ermöglichen, bei Nutzung des VPN-Anbieters [PerfectPrivacy](https://www.perfect-privacy.com), eine automatische Kaskadierung auszuführen
 
 Durch Angabe einer maximalen Hopanzahl und einer min- sowie maxtime, können die Verbindungsparameter beinflusst werden.
 
