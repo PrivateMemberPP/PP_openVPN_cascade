@@ -253,7 +253,7 @@ else
 	printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading-watchdog.service" 2>&1 | tee -a $install_log
 	printf "\n\nNach dem Neustart befindet sich das Logverzeichnis hier: $folder_logpath" 2>&1 | tee -a $install_log
 	printf "\n\nDieses Ausgabelog ist hier zu finden: $install_log" 2>&1 | tee -a $install_log
-	printf "\n\nDiese Schritte wurden der folgenden Anleitung entnommen: https://www.perfect-privacy.com/de/manuals/linux_openvpn_terminal" 2>&1 | tee -a $install_log
+	printf "\n\nEinige diese Schritte wurden der folgenden Anleitung entnommen: https://www.perfect-privacy.com/de/manuals/linux_openvpn_terminal" 2>&1 | tee -a $install_log
 fi
 
 printf "\n\nMoechtest du meine Arbeit unterstuetzen?" 2>&1 | tee -a $install_log
