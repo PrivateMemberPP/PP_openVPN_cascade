@@ -2,6 +2,9 @@
 #
 ### Variablen deklarieren
 #
+# Speicherort fuer dieses Installationslog
+install_log=/var/log/install_ovpn_cascade.log
+#
 # Pfad zur Ablage der Scripte
 scriptpath=/etc/systemd/system
 #
@@ -41,9 +44,15 @@ update_check=0
 # Bildschirm leeren
 clear
 
-printf "\n\nScript zur Installation der automatischen PP openVPN Kaskadierungsdienste"
-printf "\n-------------------------------------------------------------------------\n\n"
-printf "... der Vorgang dauert weniger als eine Minute.\n\n"
+# LOG loeschen, falls vorhanden
+if [[ -f $install_log ]];
+then
+	rm $install_log
+fi
+
+printf "\n\nScript zur Installation der automatischen PP openVPN Kaskadierungsdienste" 2>&1 | tee -a $install_log
+printf "\n-------------------------------------------------------------------------\n\n" 2>&1 | tee -a $install_log
+printf "... der Vorgang dauert weniger als eine Minute.\n\n" 2>&1 | tee -a $install_log
 
 # Paketdaten und Repository aktualisieren
 apt-get update -qq
@@ -55,7 +64,7 @@ dpkg-query -l | grep -w "tmux" > /dev/null
 if [ $? -eq "1" ];
 then
 	apt-get install tmux -qq > /dev/null
-	printf "==> tmux installiert!\n"
+	printf "==> tmux installiert!\n" 2>&1 | tee -a $install_log
 fi
 
 # pruefen, ob 'openvpn-client' installiert ist -> falls nein, installieren!
@@ -64,7 +73,7 @@ dpkg-query -l | grep -w "openvpn" > /dev/null
 if [ $? -eq "1" ];
 then
 	apt-get install openvpn -qq > /dev/null
-	printf "==> openvpn installiert!\n"
+	printf "==> openvpn installiert!\n" 2>&1 | tee -a $install_log
 fi
 
 # pruefen, ob 'resolvconf' installiert ist -> falls nein, installieren!
@@ -73,7 +82,7 @@ dpkg-query -l | grep -w "resolvconf" > /dev/null
 if [ $? -eq "1" ];
 then
 	apt-get install resolvconf -qq > /dev/null
-	printf "==> resolvconf installiert!\n"
+	printf "==> resolvconf installiert!\n" 2>&1 | tee -a $install_log
 fi
 
 # pruefen, ob 'psmisc' installiert ist -> falls nein, installieren!
@@ -82,7 +91,7 @@ dpkg-query -l | grep -w "psmisc" > /dev/null
 if [ $? -eq "1" ];
 then
 	apt-get install psmisc -qq > /dev/null
-	printf "==> psmisc installiert!\n"
+	printf "==> psmisc installiert!\n" 2>&1 | tee -a $install_log
 fi
 
 # pruefen, ob 'bc' installiert ist -> falls nein, installieren!
@@ -91,7 +100,7 @@ dpkg-query -l | grep -w "bc" > /dev/null
 if [ $? -eq "1" ];
 then
 	apt-get install bc -qq > /dev/null
-	printf "==> bc installiert!\n\n"
+	printf "==> bc installiert!\n\n" 2>&1 | tee -a $install_log
 fi
 
 ### notwendige Pakete installiert
@@ -201,45 +210,52 @@ folder_logpath=($(grep -m 1 'folder_logpath=' $scriptpath'/'$FILE_DL_PRIM_SCR | 
 
 if [ $update_check -eq "1" ];
 then
-	printf "\n------------------------------------------------"
-	printf "\nUpdate ERFOLGREICH abgeschlossen!"
-	printf "\nDienste werden wieder gestartet!"
-	printf "\n------------------------------------------------"
-	printf "\n\nPerfectPrivacy Konfigurationen befinden sich weiterhin im folgenden Verzeichnis:\n==> $path_ovpn_conf"
-	printf "\nHinweis: es werden saemtliche Konfigurationen (*.conf) verwendet, welche sich in diesem Verzeichnis befinden!"
-	printf "\n\nKEINE weitere Schritte notwendig!"
-	printf "\n---------------------------------"
+	printf "\n------------------------------------------------" 2>&1 | tee -a $install_log
+	printf "\nUpdate ERFOLGREICH abgeschlossen!" 2>&1 | tee -a $install_log
+	printf "\nDienste werden wieder gestartet!" 2>&1 | tee -a $install_log
+	printf "\n------------------------------------------------" 2>&1 | tee -a $install_log
+	printf "\n\nPerfectPrivacy Konfigurationen befinden sich weiterhin im folgenden Verzeichnis:\n==> $path_ovpn_conf" 2>&1 | tee -a $install_log
+	printf "\nHinweis: es werden saemtliche Konfigurationen (*.conf) verwendet, welche sich in diesem Verzeichnis befinden!" 2>&1 | tee -a $install_log
+	printf "\n\nKEINE weitere Schritte notwendig!" 2>&1 | tee -a $install_log
+	printf "\n---------------------------------" 2>&1 | tee -a $install_log
 
-	printf "\nDienstverwaltung über folgende Befehle:"
-	printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading.service"
-	printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading-watchdog.service"
+	printf "\nDienstverwaltung über folgende Befehle:" 2>&1 | tee -a $install_log
+	printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading.service" 2>&1 | tee -a $install_log
+	printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading-watchdog.service" 2>&1 | tee -a $install_log
 
 	systemctl start openvpn-restart-cascading.service > /dev/null
 	systemctl start openvpn-restart-cascading-watchdog.service > /dev/null
 else
 	eval mkdir -p $path_ovpn_conf
-	printf "\n------------------------------------------------"
-	printf "\nInstallation ERFOLGREICH abgeschlossen!"
-	printf "\nInstallierte Dienste noch NICHT gestartet!"
-	printf "\n------------------------------------------------"
-	printf "\n\nPerfectPrivacy Konfigurationen bitte im folgenden Verzeichnis hinterlegen:\n==> $path_ovpn_conf"
-	printf "\nHinweis: es werden saemtliche Konfigurationen (*.conf) verwendet, welche sich in diesem Verzeichnis befinden!"
-	printf "\n\nWeitere Schritte notwendig!"
-	printf "\n---------------------------"
-	printf "\nBitte folgende Anleitung aufrufen:\n==> https://www.perfect-privacy.com/de/manuals/linux_openvpn_terminal"
-	printf "\nEs muessen, laut dieser Anleitung, lediglich noch folgende Schritte ausgefuehrt werden:"
-	printf "\n\t- Herunterladen der PerfectPrivacy Konfigurationen"
-	printf "\n\t- Erstellen der 'password.txt' und anschließendes eintragen der Anmeldedaten"
-	printf "\n\t- Die 'password.txt' in den heruntergeladenen Konfigurationen eintragen"
-	printf "\n\t- Neustarten, damit die soeben installierten Dienste gestartet werden"
-	printf "\n\nDie Dienste heißen 'openvpn-restart-cascading.service' und 'openvpn-restart-cascading-watchdog.service'"
-	printf "\nDienstverwaltung über folgende Befehle:"
-	printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading.service"
-	printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading-watchdog.service"
-	printf "\n\nNach dem Neustart befindet sich das Logverzeichnis hier: $folder_logpath"
+	printf "\n------------------------------------------------" 2>&1 | tee -a $install_log
+	printf "\nInstallation ERFOLGREICH abgeschlossen!" 2>&1 | tee -a $install_log
+	printf "\nInstallierte Dienste noch NICHT gestartet!" 2>&1 | tee -a $install_log
+	printf "\n------------------------------------------------" 2>&1 | tee -a $install_log
+	printf "\n\nPerfectPrivacy OpenVPN-Konfigurationen bitte im folgenden Verzeichnis hinterlegen:\n==> $path_ovpn_conf" 2>&1 | tee -a $install_log
+	printf "\nHinweis: es werden saemtliche Konfigurationen (*.conf) verwendet, welche sich in diesem Verzeichnis befinden!" 2>&1 | tee -a $install_log
+	printf "\n\nJetzt folgende Schritte ausfuehren!" 2>&1 | tee -a $install_log
+	printf "\nHinter dem ':' stehen die Befehle" 2>&1 | tee -a $install_log
+	printf "\n-----------------------------------" 2>&1 | tee -a $install_log
+	printf "\n\nHerunterladen der PerfectPrivacy Konfigurationen" 2>&1 | tee -a $install_log
+	printf "\n\t- Wechsel in das Verzeichnis $path_ovpn_conf":" cd $path_ovpn_conf" 2>&1 | tee -a $install_log
+	printf "\n\t- Herunterladen der Konfigurationen: sudo wget --content-disposition https://www.perfect-privacy.com/downloads/openvpn/get?system=linux" 2>&1 | tee -a $install_log
+	printf "\n\t- Die Dateien entpacken: sudo unzip -j linux_op24_udp_v4_AES256GCM_AU_in_ci.zip" 2>&1 | tee -a $install_log
+	printf "\nErzeugen einer Datei mit den Logindaten" 2>&1 | tee -a $install_log
+	printf "\n\t- Die Datei im Verzeichnis erstellen, in dem wir uns befinden: sudo nano $path_ovpn_conf"password.txt"" 2>&1 | tee -a $install_log
+	printf "\n\t- Logindaten in diese Datei eintragen: erste Zeile NUR den Nutzernamen, zweite Zeile NUR das Passwort" 2>&1 | tee -a $install_log
+	printf "\n\t- Datei speichern und schließen: Strg+X -> dann mit 'J' oder 'y' bestaetigen" 2>&1 | tee -a $install_log
+	printf "\nEintragen der soeben erstellten 'password.txt' in die heruntergeladenen Configs" 2>&1 | tee -a $install_log
+	printf %s "\n\t- Alle Configs mit dem Pfad zur 'password.txt' editieren: sudo find *.conf -type f -exec sed -i "/auth-user-pass/c auth-user-pass $path_ovpn_conf"password.txt"" {} \;" 2>&1 | tee -a $install_log
+	printf "\n\\nZum Abschluss muss noch das System neugestartet werden: sudo reboot" 2>&1 | tee -a $install_log
+	printf "\n\nDie installierten Dienste heißen 'openvpn-restart-cascading.service' und 'openvpn-restart-cascading-watchdog.service'" 2>&1 | tee -a $install_log
+	printf "\nDienstverwaltung über folgende Befehle:" 2>&1 | tee -a $install_log
+	printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading.service" 2>&1 | tee -a $install_log
+	printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading-watchdog.service" 2>&1 | tee -a $install_log
+	printf "\n\nNach dem Neustart befindet sich das Logverzeichnis hier: $folder_logpath" 2>&1 | tee -a $install_log
+	printf "\n\nDieses Ausgabelog ist hier zu finden: $install_log" 2>&1 | tee -a $install_log
 fi
 
-printf "\n\nMoechtest du meine Arbeit unterstuetzen?"
-printf "\nUeber eine kleine Donation an folgende PayPal.me-Adresse wuerde ich mich sehr freuen:"
-printf "\n\nhttps://www.paypal.me/patricklwl"
-printf "\n\n------------------------------------------------\n\n"
+printf "\n\nMoechtest du meine Arbeit unterstuetzen?" 2>&1 | tee -a $install_log
+printf "\nUeber eine kleine Donation an folgende PayPal.me-Adresse wuerde ich mich sehr freuen:" 2>&1 | tee -a $install_log
+printf "\n\nhttps://www.paypal.me/patricklwl" 2>&1 | tee -a $install_log
+printf "\n\n------------------------------------------------\n\n" 2>&1 | tee -a $install_log
