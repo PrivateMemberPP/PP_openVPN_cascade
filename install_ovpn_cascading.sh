@@ -243,9 +243,9 @@ else
 	printf "\nErzeugen einer Datei mit den Logindaten" 2>&1 | tee -a $install_log
 	printf "\n\t- Die Datei im Verzeichnis erstellen, in dem wir uns befinden: sudo nano $path_ovpn_conf"password.txt"" 2>&1 | tee -a $install_log
 	printf "\n\t- Logindaten in diese Datei eintragen: erste Zeile NUR den Nutzernamen, zweite Zeile NUR das Passwort" 2>&1 | tee -a $install_log
-	printf "\n\t- Datei speichern und schließen: Strg+X -> dann mit 'J' oder 'y' bestaetigen" 2>&1 | tee -a $install_log
+	printf "\n\t- Datei speichern und schliessen: Strg+X -> dann mit 'J' oder 'y' bestaetigen" 2>&1 | tee -a $install_log
 	printf "\nEintragen der soeben erstellten 'password.txt' in die heruntergeladenen Configs" 2>&1 | tee -a $install_log
-	printf %s "\n\t- Alle Configs mit dem Pfad zur 'password.txt' editieren: sudo find *.conf -type f -exec sed -i "/auth-user-pass/c auth-user-pass $path_ovpn_conf"password.txt"" {} \;" 2>&1 | tee -a $install_log
+	printf "%s\n\t- Alle Configs mit dem Pfad zur 'password.txt' editieren: sudo find *.conf -type f -exec sed -i %s""\"/auth-user-pass/c auth-user-pass $path_ovpn_conf"password.txt"\" {} \;" 2>&1 | tee -a $install_log
 	printf "\n\\nZum Abschluss muss noch das System neugestartet werden: sudo reboot" 2>&1 | tee -a $install_log
 	printf "\n\nDie installierten Dienste heißen 'openvpn-restart-cascading.service' und 'openvpn-restart-cascading-watchdog.service'" 2>&1 | tee -a $install_log
 	printf "\nDienstverwaltung über folgende Befehle:" 2>&1 | tee -a $install_log
