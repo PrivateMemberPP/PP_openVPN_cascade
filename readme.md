@@ -34,8 +34,8 @@ sudo bash -c "$(wget -qO - https://raw.githubusercontent.com/PrivateMemberPP/PP_
 Wenn es sich um eine Erstinstallation handelt, müssen die Hinweise im Terminalfenster beachtet werden.
 
 #### Updateausführung
-Bei einem Update kann das Script genau wie bereits beschrieben ausgführt werden.
-Es wird anhand des vorhandenseins des Hauptscript erkannt, dass es sich um ein Update handelt.
+Bei einem Update kann das Script genau wie bereits beschrieben ausgeführt werden.
+Es wird, anhand des Vorhandenseins des Hauptscripts, erkannt, dass es sich um ein Update handelt.
 Sämtliche Variablendeklaration werden aus dem bisher produktiven Script übernommen und in das neue eingetragen.
 Im Anschluss werden die Dienste wieder gestartet.
 
@@ -59,7 +59,7 @@ openvpn-restart-cascading-watchdog.service
 ### Variablen deklarieren
 Es müssen lediglich die Variablen am Anfang des Hauptscripts definiert werden.
 Sämtliche Variablen, welche für das Watchdog-Script abhängig sind, werden beim Start des Scripts/Dienstes automatisch übernommen.
-Im Anschluss wird immer der Watchdog-Dienste neugestartet.
+Im Anschluss wird immer der Watchdog-Dienst neugestartet.
 
 Das Hauptscript befindet sich hier:
 ```
@@ -78,6 +78,6 @@ Das Hauptscript befindet sich hier:
 ## Donate
 
 Möchtest du meine Arbeit unterstützen?
-Über eine kleine Donation an folgende PayPal.me-Adresse wuerde ich mich sehr freuen:
+Über eine kleine Donation an folgende PayPal.me-Adresse würde ich mich sehr freuen:
 
 [PayPal.me](https://www.paypal.me/patricklwl)
