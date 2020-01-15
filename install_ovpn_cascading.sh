@@ -237,7 +237,7 @@ else
 	printf "\nHinter dem ':' stehen die Befehle" 2>&1 | tee -a $install_log
 	printf "\n-----------------------------------" 2>&1 | tee -a $install_log
 	printf "\n\nHerunterladen der PerfectPrivacy Konfigurationen" 2>&1 | tee -a $install_log
-	printf "\n\t- Wechsel in das Verzeichnis $path_ovpn_conf":" cd $path_ovpn_conf" 2>&1 | tee -a $install_log
+	printf "\n\t- Wechsel in das Zielverzeichnis: cd $path_ovpn_conf" 2>&1 | tee -a $install_log
 	printf "\n\t- Herunterladen der Konfigurationen: sudo wget --content-disposition https://www.perfect-privacy.com/downloads/openvpn/get?system=linux" 2>&1 | tee -a $install_log
 	printf "\n\t- Die Dateien entpacken: sudo unzip -j linux_op24_udp_v4_AES256GCM_AU_in_ci.zip" 2>&1 | tee -a $install_log
 	printf "\nErzeugen einer Datei mit den Logindaten" 2>&1 | tee -a $install_log
@@ -253,6 +253,7 @@ else
 	printf "\n\t- sudo systemctl start|stop|restart openvpn-restart-cascading-watchdog.service" 2>&1 | tee -a $install_log
 	printf "\n\nNach dem Neustart befindet sich das Logverzeichnis hier: $folder_logpath" 2>&1 | tee -a $install_log
 	printf "\n\nDieses Ausgabelog ist hier zu finden: $install_log" 2>&1 | tee -a $install_log
+	printf "\n\nDiese Schritte wurden der folgenden Anleitung entnommen: https://www.perfect-privacy.com/de/manuals/linux_openvpn_terminal" 2>&1 | tee -a $install_log
 fi
 
 printf "\n\nMoechtest du meine Arbeit unterstuetzen?" 2>&1 | tee -a $install_log
