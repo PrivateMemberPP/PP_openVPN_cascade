@@ -69,9 +69,19 @@ Es müssen lediglich die Variablen am Anfang des Hauptscripts definiert werden.
 Sämtliche Variablen, welche für das Watchdog-Script abhängig sind, werden beim Start des Scripts/Dienstes automatisch übernommen.
 Im Anschluss wird immer der Watchdog-Dienst neugestartet.
 
-Das Hauptscript befindet sich hier:
+Das Hauptscript kann z.B. mit nano editiert werden:
 ```
-/etc/systemd/system/openvpn_service_restart_cascading.sh
+sudo nano /etc/systemd/system/openvpn_service_restart_cascading.sh
+```
+
+Damit die Änderungen angewendet werden, muss der Dienst des Hauptscripts neugestartet werden, dies geschieht mit:
+```
+sudo systemctl restart openvpn-restart-cascading.service
+```
+
+Im Anschluss immer das LOG prüfen um zu sehen, dass die neuen Verbindungen aufgebaut werden:
+```
+less /var/log/ovpn_reconnect/vpnlog_restart.log
 ```
 
 ## Built With
