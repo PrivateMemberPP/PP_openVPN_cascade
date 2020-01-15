@@ -39,6 +39,14 @@ Es wird, anhand des Vorhandenseins des Hauptscripts, erkannt, dass es sich um ei
 Sämtliche Variablendeklaration werden aus dem bisher produktiven Script übernommen und in das neue eingetragen.
 Im Anschluss werden die Dienste wieder gestartet.
 
+### Deinstallation
+Auch die Deinstallation kann mit nur einem Befehl ausgeführt werden.
+Am Ende sind keine Verweise, Dienste oder Informationen (LOG's...) mehr vorhanden.
+
+```
+sudo bash -c "$(wget -qO - https://raw.githubusercontent.com/PrivateMemberPP/PP_openVPN_cascade/master/uninstall_ovpn_cascading.sh)"
+```
+
 ## Steuerung 
 
 ### Dienstverwaltung
