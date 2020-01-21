@@ -1,0 +1,9 @@
+Durch die Einrichtung dieser Scripte und Services wird eine automatische OpenVPN-Konnektivitaet mit 1 oder mehr zufaelligen Servern fuer eine zufaellige Zeitspanne gewaehrleistet. Ein manuelles Verbinden mit einem oder mehreren HOP's ist somit nicht mehr notwendig. Durch die, nach Ablauf der Sitzungsdauer, wechselnden VPN-Standorte wird eine erweiterte Sicherheit gewaehrleistet. Das Hauptscript ist dazu ausgelegt, staendig zu arbeiten und die soeben beschriebene Funktion laufend zu wiederholen.
+
+Als Einsatzbasis wird ein System mit einer Linuxdistribution als Betriebssystem erwartet. Getestet wurde die Konfiguration unter Debian Buster Headless Server.
+
+Fuer die Verwendung wird empfohlen, zuvor saemtliche Verbindungen ins Internet per Firewall-Regeln zu sperren (kurze Anleitung ist vorhanden). Es muessen jedoch die Ports erlaubt werden, welche laut den OpenVPN-Configs (Amsterdam.conf, Basel.conf...) fuer den Verbindungsaufbau benoetigt werden. Ferner ist das Hauptscript lediglich in der Lage die Configs zu nutzen, welche sich auf die Staedte beziehen (Amsterdam.conf, Basel.conf...). Damit die Verbindung erfolgen kann, muss in jeder OpenVPN-Config auf eine Datei verwiesen werden, welche die Userdaten (Benutzername, Passwort) beinhaltet [siehe: https://www.perfect-privacy.com/de/manuals/linux_openvpn_terminal].
+
+Nach Einrichtung der Firewall-Regeln wird somit gewaehrleistet, dass keine Datenpakete ueber die physikalische Schnittstelle ins Internet gelangen (z.B. vor der Scriptausfuehrung; waehrend einer neuen Verbindung nach Ablauf der Sitzungsdauer; im Fehlerfall usw.).
+
+Somit eignet sich das Script auch optimal fuer die Verwendung auf einem Router, welcher mit einer Linux-Distribution arbeitet.
