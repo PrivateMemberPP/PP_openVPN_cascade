@@ -9,7 +9,7 @@ folder_logpath=/var/log/ovpn_reconnect/
 logfile_script="$folder_logpath"vpnlog_restart.log
 #
 # Pfad zu den OpenVPN-Configs, welche genutzt werden sollen
-path_ovpn_conf=/etc/openvpn/connections/for_usenet/
+path_ovpn_conf=/etc/openvpn/connections/
 #
 # Pfad zum Kaskadierungsscript von Perfect-Privacy
 path_ovpn_cascade_script=/etc/openvpn/updown.sh
