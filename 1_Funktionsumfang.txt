@@ -1,0 +1,30 @@
+HAUPTSCRIPT
+-----------
+
+- automatische Anpassung der relevanten Variablen fuer das Watchdog-Script, wenn diese im Hauptscript geaendert werden
+- automatische Anpassung der maximalen HOP's im PerfectPrivacy-updown-Script, wenn diese im Hauptscript geaendert werden
+- Anzahl der HOP's kann variabel festgelegt werden (ACHTUNG: bei '8' wird es problematisch und die Verbindung wird z.T. nicht aufgebaut) => Empfehlung: '2' bis '4'
+- zufaellige Ermittlung einer Verbindungsdauer zwischen einer frei waehlbaren minimalen und maximalen Dauer
+- automatisches Clearing des Hauptscript-LOG's, nach einer frei waehlbaren Anzahl an neuen Verbindungen
+- automatischer Aufbau der Anfangs definierten HOP's anhand der Configs, welche sich im definierten Verzeichnis befinden
+- zufaellige Auswahl der einzelnen HOP's unter Beruecksichtigung, dass je Sitzungsaufbau kein HOP doppelt verbunden wird
+- definierbares Timeout, wenn ein HOP nicht erreichbar ist -> im Anschluss naechsten zufaelligen Server nutzen
+- Ueberwachung der nutzbaren Server fuer Folgeverbindungen
+- Hinweis im LOG, falls mehr HOP's erwuenscht sind, als Configs vorhanden
+- Hinzuziehen des PerfectPrivacy-updown-Scripts zum Verbindungsaufbau ab dem 2. HOP (Danke an PP!!!)
+- Anlage einer eigenen TMUX-Session je HOP
+- Ermittlung der scriptrelevanten Variablen anhand der jeweils aktuellen LOG's
+- bestehende Verbindungsueberpruefung anhand des Rueckgabeeregbnisses der PerfectPrivacy-CSV
+- automatisches aufraeumen von 'innen nach außen', wenn die aktuelle Session abgelaufen ist und eine neue Session aufgebaut werden soll
+- sauberes und 'sprechendes' Logging in frei definierbaren Verzeichnissen
+
+
+WATCHDOG
+--------
+
+- stetige Ueberwachung der aktuellen Verbindung
+- Check auf aktuellen Status der Verbindung
+	- warten bei neuen Verbindungsaufbau, bis letzter HOP verbunden ist
+	- wenn alle HOP's verbunden sind, wird regelmaeßig der Ausgangsknoten geprueft
+	- wenn Ausgangsknoten sich aendert, soll das Hauptscript erneut abgearbeitet werden
+	- wenn ein Server der Kaskade nicht mehr erreichbar ist, soll das Hauptscript erneut abgearbeitet werden
