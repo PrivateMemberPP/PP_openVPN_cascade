@@ -1,6 +1,0 @@
-Installationsanleitung
-----------------------
-
-1. Folgenden Befehl im Terminal ausfuehren:
-sudo bash -c "$(wget -qO - https://raw.githubusercontent.com/PrivateMemberPP/PP_openVPN_cascade/master/install_ovpn_cascading.sh)"
-2. Hinweise am Ende der Installation beachten und durchfuehren
