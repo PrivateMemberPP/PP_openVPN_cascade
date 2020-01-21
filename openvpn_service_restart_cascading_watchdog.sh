@@ -20,19 +20,20 @@ function get_state {
 	sleep 1
 }
 function check_inactivity {
-	grep "Inactivity timeout (--ping-restart), restarting" "$folder_logpath"log.vpnhop*
-	if [ $? -eq "0" ];
+	if grep "Inactivity timeout (--ping-restart), restarting" "$folder_logpath"log.vpnhop*
 	then
-		echo -e '\n''----------'ACHTUNG'----------' >> $logfile_watchdog
-		echo -e Es ist jetzt $(date) >> $logfile_watchdog
-		echo -e Mindestens ein Server der Kaskade ist nicht mehr erreichbar'!' >> $logfile_watchdog
-		echo -e Dienste nun neustarten, damit ein sicherer Zustand wiederhergestellt werden kann'!' >> $logfile_watchdog
+		{
+			echo -e "\n----------ACHTUNG----------"
+			echo -e "Es ist jetzt $(date)"
+			echo -e "Mindestens ein Server der Kaskade ist nicht mehr erreichbar!"
+			echo -e "Dienste nun neustarten, damit ein sicherer Zustand wiederhergestellt werden kann!"
+		} >> $logfile_watchdog
 		kill_primary_process
 		sudo rm $checkfile_watchdog
 	fi
 }
 function check_state {
-	wget -q -O - https://checkip.perfect-privacy.com/csv | grep -i $current_state >> /dev/null
+	wget -q -O - https://checkip.perfect-privacy.com/csv | grep -i "$current_state" >> /dev/null
 	RET=$?
 	sleep 8
 }
@@ -46,7 +47,7 @@ function kill_primary_process {
 	cleanup
 	PID=$(sudo systemctl --property="MainPID" show openvpn-restart-cascading.service | cut -d '=' -f 2)
 	sleep 0.2
-	sudo kill -9 -$( ps opgid= $PID | tr -d ' ' )
+	sudo kill -9 -"$(ps -o pgid= "$PID" | grep -o '[0-9]*')" > /dev/null
 }
 #
 ### ENDE Definition von Funktionen ###
@@ -71,8 +72,8 @@ do
 			sleep 5
 		else
 			sleep 5
-			echo -e '\n''\n'Verbindung besteht seit':''\t''\t'$(date) >> $logfile_watchdog
-			echo -e mit Ausgangsknoten':''\t''\t''\t'$current_state >> $logfile_watchdog
+			echo -e "\n\nVerbindung besteht seit:\t\t$(date)" >> $logfile_watchdog
+			echo -e "mit Ausgangsknoten:\t\t\t$current_state" >> $logfile_watchdog
 			sleep 5
 
 			check_inactivity
@@ -88,10 +89,12 @@ do
 			get_state
 			if [ ! "$current_state" == "Warten" ];
 			then
-				echo -e '\n''----------'ACHTUNG'----------' >> $logfile_watchdog
-				echo -e Es ist jetzt $(date) >> $logfile_watchdog
-				echo -e Austrittsknoten hat sich geaendert'!' >> $logfile_watchdog
-				echo -e Dienste nun neustarten, damit ein sicherer Zustand wiederhergestellt werden kann'!' >> $logfile_watchdog
+				{
+					echo -e "\n----------ACHTUNG----------"
+					echo -e "Es ist jetzt $(date)"
+					echo -e "Austrittsknoten hat sich geaendert!"
+					echo -e "Dienste nun neustarten, damit ein sicherer Zustand wiederhergestellt werden kann!"
+				} >> $logfile_watchdog
 				kill_primary_process
 				sudo rm $checkfile_watchdog
 			fi
