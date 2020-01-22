@@ -172,10 +172,6 @@ sed -i "/MAX_HOPID=/c MAX_HOPID=$maxhop" $path_ovpn_cascade_script
 # j ist der Counter zum loeschen des LOG's -> Deklaration oben in den Variablendeklarationen (logdelete_count)
 j=0
 
-# alte offene VPN-Verbindungen und Terminals beenden + nicht mehr benoetigte LOG's loeschen
-cleanup
-# Nun laufen keine VPN-Verbindungen und Terminals mehr + unnoetige LOG's geloescht
-
 # ueberpruefen, ob mehr Verbindungen erwuenscht sind, als Configs vorhanden
 # so wird auch schon Mal das Array mit saemtlichen Verbindungen angelegt
 ermittle_server
@@ -237,6 +233,9 @@ do
 			then
 				hopnr=1
 				errorcount=0
+
+				# Serverliste muss erneut eingelesen werden
+				ermittle_server
 
 				# den ersten Server ermitteln und das Array konsolidieren
 				remux_server_list
