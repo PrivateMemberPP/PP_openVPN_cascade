@@ -33,9 +33,6 @@ maxhop=3
 # HINWEIS: die erste Verbindung benoetigt i.d.R. '16' Sekunden
 timeoutcount=20
 #
-# LOGDELETE: Nach wie vielen -erfolgreichen- neuen VPN-Verbindungen soll das LOG geloescht werden? (Schutz, damit dieses nicht den Speicher unendlich vollschreibt)
-logdelete_count=5
-#
 ### ENDE Variablen deklarieren ###
 
 ### Definition von Funktionen ###
@@ -168,9 +165,6 @@ fi
 
 # Anzahl maximaler HOP's in das Perfect-Privacy-Script uebernehmen
 sed -i "/MAX_HOPID=/c MAX_HOPID=$maxhop" $path_ovpn_cascade_script
-
-# j ist der Counter zum loeschen des LOG's -> Deklaration oben in den Variablendeklarationen (logdelete_count)
-j=0
 
 # ueberpruefen, ob mehr Verbindungen erwuenscht sind, als Configs vorhanden
 # so wird auch schon Mal das Array mit saemtlichen Verbindungen angelegt
@@ -368,17 +362,12 @@ do
 
 	echo "Zeit abgelaufen! Die Verbindungen werden jetzt abgebaut!" >> $logfile_script
 
-	# Counter zum leeren des LOG's inkrementieren
-	j=$((j+1))
-
-	# Nach n neuen Verbindungen soll das LOG geleert werden
-	if [ "$j" -eq "$logdelete_count" ];
+	# Wenn das LOG groesser als 20MB ist, dieses leeren
+	if [[ "$(wc -c $logfile_script | cut -d ' ' -f 1)" -gt "20480" ]];
 	then
 		echo "" > $logfile_script
-
-		# den Counter nun wieder zuruecksetzen
-		j=0
 	fi
+
 	# das Array mit den gespeicherten Servern loeschen
 	unset con_servers
 
