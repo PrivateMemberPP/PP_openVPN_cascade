@@ -6,10 +6,10 @@
 folder_logpath=/var/log/ovpn_reconnect/
 #
 # Logfile fuer dieses Watchdog-Script
-logfile_watchdog=/var/log/watchdog_openvpn_reconnect.log
+logfile_watchdog="$folder_logpath"watchdog_openvpn_reconnect.log
 #
 # Checkfile fuer den Watchdog-Service
-checkfile_watchdog=/var/log/ovpn_reconnect/exitnode.log
+checkfile_watchdog="$folder_logpath"exitnode.log
 #
 ### ENDE Variablen deklarieren ###
 #
@@ -98,6 +98,11 @@ do
 				kill_primary_process
 				sudo rm $checkfile_watchdog
 			fi
+		fi
+		# Wenn das LOG groesser als 20MB ist, dieses leeren
+		if [[ "$(wc -c $logfile_watchdog | cut -d ' ' -f 1)" -gt "20480" ]];
+		then
+			echo "" > $logfile_watchdog
 		fi
 	done
 done
