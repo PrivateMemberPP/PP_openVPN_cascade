@@ -175,8 +175,6 @@ then
 	cur_timeoutcount=($(grep -m 1 "timeoutcount=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
 	search_and_replace timeoutcount= $scriptpath/$FILE_DL_PRIM_SCR $cur_timeoutcount $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
 
-	cur_logdelete_count=($(grep -m 1 "logdelete_count=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
-	search_and_replace logdelete_count= $scriptpath/$FILE_DL_PRIM_SCR $cur_logdelete_count $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
 fi
 
 # die Dateien in den Zielverzeichnissen ablegen
