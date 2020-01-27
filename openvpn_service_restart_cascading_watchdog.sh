@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 #
 ### Variablen deklarieren ###
 #
@@ -15,6 +15,14 @@ checkfile_watchdog="$folder_logpath"exitnode.log
 #
 ### Definition von Funktionen ###
 #
+function checkfile {
+	if [ -f "$checkfile_watchdog" ];
+	then
+		chkfl="1"
+	else
+		chkfl="0"
+	fi
+}
 function get_state {
 	current_state=$(cat $checkfile_watchdog)
 	sleep 1
@@ -29,7 +37,6 @@ function check_inactivity {
 			echo -e "Dienste nun neustarten, damit ein sicherer Zustand wiederhergestellt werden kann!"
 		} >> $logfile_watchdog
 		kill_primary_process
-		sudo rm $checkfile_watchdog
 	fi
 }
 function check_state {
@@ -49,60 +56,82 @@ function kill_primary_process {
 	sleep 0.2
 	sudo kill -9 -"$(ps -o pgid= "$PID" | grep -o '[0-9]*')" > /dev/null
 }
-#
-### ENDE Definition von Funktionen ###
-#
-### HAUPTPROGRAMM ###
-while true
-do
-	# erstmal warten, bis die Datei erstellt wurde
-	while [ ! -f "$checkfile_watchdog" ]
-	do
-		sleep 5
-	done
-
-	# Datei existiert und kann kontinuierlich ausgewertet werden
+function log_delete {
+	if [[ "$(wc -c $logfile_watchdog | cut -d ' ' -f 1)" -gt "20480" ]];
+	then
+		echo "" > $logfile_watchdog
+	fi
+}
+function continuously_check {
 	while [ -f "$checkfile_watchdog" ]
 	do
 		# aktuellen Dateiinhalt in eine Variable speichern
 		get_state
 
-		if [ "$current_state" == "Warten" ];
-		then
-			sleep 5
-		else
-			sleep 5
-			echo -e "\n\nVerbindung besteht seit:\t\t$(date)" >> $logfile_watchdog
-			echo -e "mit Ausgangsknoten:\t\t\t$current_state" >> $logfile_watchdog
-			sleep 5
+		echo -e "\n\nVerbindung besteht seit:\t\t$(date)" >> $logfile_watchdog
+		echo -e "mit Ausgangsknoten:\t\t\t$current_state" >> $logfile_watchdog
 
+		check_inactivity
+		check_state
+
+		while [ $RET -eq "0" ]
+		do
 			check_inactivity
-			check_state
-
-			while [ $RET -eq "0" ]
-			do
-				check_inactivity
-				get_state
-				check_state
-			done
-
 			get_state
-			if [ ! "$current_state" == "Warten" ];
-			then
-				{
-					echo -e "\n----------ACHTUNG----------"
-					echo -e "Es ist jetzt $(date)"
-					echo -e "Austrittsknoten hat sich geaendert!"
-					echo -e "Dienste nun neustarten, damit ein sicherer Zustand wiederhergestellt werden kann!"
-				} >> $logfile_watchdog
-				kill_primary_process
-				sudo rm $checkfile_watchdog
-			fi
-		fi
-		# Wenn das LOG groesser als 20MB ist, dieses leeren
-		if [[ "$(wc -c $logfile_watchdog | cut -d ' ' -f 1)" -gt "20480" ]];
+			check_state
+		done
+
+		get_state
+		if [ ! "$current_state" == "Warten" ];
 		then
-			echo "" > $logfile_watchdog
+			{
+				echo -e "\n----------ACHTUNG----------"
+				echo -e "Es ist jetzt $(date)"
+				echo -e "Austrittsknoten hat sich geaendert!"
+				echo -e "Dienste nun neustarten, damit ein sicherer Zustand wiederhergestellt werden kann!"
+			} >> $logfile_watchdog
+			kill_primary_process
+			sudo rm $checkfile_watchdog
 		fi
+		return
 	done
+}
+#
+### ENDE Definition von Funktionen ###
+#
+### HAUPTPROGRAMM ###
+timeout=0
+
+while true
+do
+	checkfile
+
+	case "$chkfl" in
+		# Datei existiert und kann kontinuierlich ausgewertet werden
+		1)
+			get_state
+			case "$current_state" in
+				Warten)
+					sleep 5
+					;;
+				*)
+					continuously_check
+					;;
+			esac
+			;;
+
+		# Datei existiert noch nicht, erneut pruefen
+		0)
+			# Wenn das LOG groesser als 20MB ist, dieses leeren
+			log_delete
+
+			sleep 2
+			timeout=$(("timeout" + "2"))
+
+			if [ "$timeout" -eq "10" ]
+			then
+				kill_primary_process
+			fi
+			;;
+	esac
 done
