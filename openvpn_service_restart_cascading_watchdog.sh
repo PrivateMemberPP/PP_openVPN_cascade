@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 #
 ### Variablen deklarieren ###
 #
@@ -40,7 +40,7 @@ function check_inactivity {
 	fi
 }
 function check_state {
-	wget -q -O - https://checkip.perfect-privacy.com/csv | grep -i "$current_state" >> /dev/null
+	wget -q -t 1 -T 8 -O - https://checkip.perfect-privacy.com/csv | grep -i "$current_state" >> /dev/null
 	RET=$?
 	sleep 8
 }
