@@ -40,7 +40,7 @@ function check_inactivity {
 	fi
 }
 function check_state {
-	wget -q -O - https://checkip.perfect-privacy.com/csv | grep -i "$current_state" >> /dev/null
+	wget -qO- icanhazip.com | grep "$current_state" >> /dev/null
 	RET=$?
 	sleep 8
 }
@@ -69,7 +69,7 @@ function continuously_check {
 		get_state
 
 		echo -e "\n\nVerbindung besteht seit:\t\t$(date)" >> $logfile_watchdog
-		echo -e "mit Ausgangsknoten:\t\t\t$current_state" >> $logfile_watchdog
+		echo -e "mit oeffentliche IP:\t\t\t$current_state" >> $logfile_watchdog
 
 		check_inactivity
 		check_state
@@ -87,7 +87,7 @@ function continuously_check {
 			{
 				echo -e "\n----------ACHTUNG----------"
 				echo -e "Es ist jetzt $(date)"
-				echo -e "Austrittsknoten hat sich geaendert!"
+				echo -e "Oeffentliche IP hat sich geaendert:\t$(wget -qO- icanhazip.com)"
 				echo -e "Dienste nun neustarten, damit ein sicherer Zustand wiederhergestellt werden kann!"
 			} >> $logfile_watchdog
 			kill_primary_process
