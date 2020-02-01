@@ -217,7 +217,7 @@ do
 	while [[ "$endtim_sec" -eq "0" ]] || [[ "$curtim_sec" -le "$endtim_sec" ]]
 	do
 		# pruefen, ob eine aktive VPN-Verbindung besteht
-		if wget -q -t 1 -T 8 -O - https://checkip.perfect-privacy.com/csv | grep perfect-privacy.com >> /dev/null
+		if wget -q -t 2 -T 10 -O - https://checkip.perfect-privacy.com/csv | grep perfect-privacy.com >> /dev/null
 		then
 			# 10 Sekunden warten, bevor erneut geprueft wird
 			sleep 10
