@@ -216,8 +216,11 @@ do
 	### Beginn innere Schleife ###
 	while [[ "$endtim_sec" -eq "0" ]] || [[ "$curtim_sec" -le "$endtim_sec" ]]
 	do
-		# pruefen, ob eine aktive VPN-Verbindung besteht
-		if wget -q -O - https://checkip.perfect-privacy.com/csv | grep perfect-privacy.com >> /dev/null
+		# aktuellen Verbindungsstatus aus dem Checkfile lesen und in eine Variable speichern
+		current_state=$(cat $checkfile_watchdog)
+
+		# pruefen, eine Verbindung besteht / der Ausgangsserver verwendet wird
+		if wget -qO- icanhazip.com | grep "$current_state" >> /dev/null
 		then
 			# 10 Sekunden warten, bevor erneut geprueft wird
 			sleep 10
@@ -325,7 +328,7 @@ do
 				else
 					echo -e "MaxHOP auf $maxhop festgelegt, keine weiteren Verbindungen benoetigt!" >> $logfile_script
 				fi
-				echo "$server_name" > $checkfile_watchdog
+				echo "$(wget -qO- icanhazip.com)" > $checkfile_watchdog
 
 				if [ "$maxhop" -gt "1" ];
 				then
@@ -337,7 +340,7 @@ do
 				get_end_tim
 
 				echo -e "\n\nVerbindungsstart:\t$(date)" >> $logfile_script
-				echo -e "Verbindungsende:\t$endtim_dat" >> $logfile_script
+				echo -e "Verbindungsablauf:\t$endtim_dat" >> $logfile_script
 
 				# nun sind wir endgueltig verbunden und setzen als Merker ein Flag
 				connected_check=1
