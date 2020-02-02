@@ -6,13 +6,13 @@
 install_log=/var/log/install_ovpn_cascade.log
 #
 # Pfad zur Ablage der Scripte
-scriptpath=/etc/systemd/system
+scriptpath_SVC=/etc/systemd/system
 #
 # Pfad zur Ablage der Service/Dienst-Dateien
 servicepath=/lib/systemd/system
 #
 # Pfad zur Ablage des PP Kaskadierungsscripts
-scriptpath_PP=/etc/openvpn
+scriptpath_UPD=/etc/openvpn
 #
 # Downloadlink Hauptscript
 DL_PRIM_SCR=https://raw.githubusercontent.com/PrivateMemberPP/PP_openVPN_cascade/master/openvpn_service_restart_cascading.sh
@@ -27,7 +27,7 @@ DL_PRIM_SRV=https://raw.githubusercontent.com/PrivateMemberPP/PP_openVPN_cascade
 DL_WATC_SRV=https://raw.githubusercontent.com/PrivateMemberPP/PP_openVPN_cascade/master/openvpn-restart-cascading-watchdog.service
 #
 # Downloadlink PP Kaskadierungsscript
-DL_CASC_SCR=https://www.perfect-privacy.com/downloads/updown.sh
+DL_CASC_SCR=https://raw.githubusercontent.com/PrivateMemberPP/PP_openVPN_cascade/master/updown.sh
 #
 ### ENDE Variablen deklarieren
 
@@ -141,53 +141,53 @@ sleep 2
 
 # die Dateien in den Zielverzeichnissen ablegen und zuvor prüfen, ob das Hauptscript schon vorhanden ist (im Falle eines Updates)
 # falls vorhanden, die Variablen zuvor in das neuen, heruntergeladene Script erst uebernehmen
-if [[ -f "$scriptpath/$FILE_DL_PRIM_SCR" ]];
+if [[ -f "$scriptpath_SVC/$FILE_DL_PRIM_SCR" ]];
 then
 	update_check=1
 
-	cur_folder_logpath=($(grep -m 1 "folder_logpath=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
-	search_and_replace folder_logpath= $scriptpath/$FILE_DL_PRIM_SCR $cur_folder_logpath $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+	cur_folder_logpath=($(grep -m 1 "folder_logpath=" "$scriptpath_SVC"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace folder_logpath= $scriptpath_SVC/$FILE_DL_PRIM_SCR $cur_folder_logpath $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
 
-	cur_logfile_script=($(grep -m 1 "logfile_script=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
-	search_and_replace logfile_script= $scriptpath/$FILE_DL_PRIM_SCR $cur_logfile_script $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+	cur_logfile_script=($(grep -m 1 "logfile_script=" "$scriptpath_SVC"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace logfile_script= $scriptpath_SVC/$FILE_DL_PRIM_SCR $cur_logfile_script $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
 
-	cur_path_ovpn_conf=($(grep -m 1 "path_ovpn_conf=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
-	search_and_replace path_ovpn_conf= $scriptpath/$FILE_DL_PRIM_SCR $cur_path_ovpn_conf $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+	cur_path_ovpn_conf=($(grep -m 1 "path_ovpn_conf=" "$scriptpath_SVC"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace path_ovpn_conf= $scriptpath_SVC/$FILE_DL_PRIM_SCR $cur_path_ovpn_conf $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
 
-	cur_path_ovpn_cascade_script=($(grep -m 1 "path_ovpn_cascade_script=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
-	search_and_replace path_ovpn_cascade_script= $scriptpath/$FILE_DL_PRIM_SCR $cur_path_ovpn_cascade_script $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+	cur_path_ovpn_cascade_script=($(grep -m 1 "path_ovpn_cascade_script=" "$scriptpath_SVC"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace path_ovpn_cascade_script= $scriptpath_SVC/$FILE_DL_PRIM_SCR $cur_path_ovpn_cascade_script $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
 
-	cur_checkfile_watchdog=($(grep -m 1 "checkfile_watchdog=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
-	search_and_replace checkfile_watchdog= $scriptpath/$FILE_DL_PRIM_SCR $cur_checkfile_watchdog $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+	cur_checkfile_watchdog=($(grep -m 1 "checkfile_watchdog=" "$scriptpath_SVC"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace checkfile_watchdog= $scriptpath_SVC/$FILE_DL_PRIM_SCR $cur_checkfile_watchdog $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
 
-	cur_scriptfile_watchdog=($(grep -m 1 "scriptfile_watchdog=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
-	search_and_replace scriptfile_watchdog= $scriptpath/$FILE_DL_PRIM_SCR $cur_scriptfile_watchdog $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+	cur_scriptfile_watchdog=($(grep -m 1 "scriptfile_watchdog=" "$scriptpath_SVC"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace scriptfile_watchdog= $scriptpath_SVC/$FILE_DL_PRIM_SCR $cur_scriptfile_watchdog $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
 
-	cur_mintime=($(grep -m 1 "mintime=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
-	search_and_replace mintime= $scriptpath/$FILE_DL_PRIM_SCR $cur_mintime $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+	cur_mintime=($(grep -m 1 "mintime=" "$scriptpath_SVC"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace mintime= $scriptpath_SVC/$FILE_DL_PRIM_SCR $cur_mintime $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
 
-	cur_maxtime=($(grep -m 1 "maxtime=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
-	search_and_replace maxtime= $scriptpath/$FILE_DL_PRIM_SCR $cur_maxtime $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+	cur_maxtime=($(grep -m 1 "maxtime=" "$scriptpath_SVC"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace maxtime= $scriptpath_SVC/$FILE_DL_PRIM_SCR $cur_maxtime $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
 
-	cur_maxhop=($(grep -m 1 "maxhop=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
-	search_and_replace maxhop= $scriptpath/$FILE_DL_PRIM_SCR $cur_maxhop $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+	cur_maxhop=($(grep -m 1 "maxhop=" "$scriptpath_SVC"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace maxhop= $scriptpath_SVC/$FILE_DL_PRIM_SCR $cur_maxhop $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
 
-	cur_timeoutcount=($(grep -m 1 "timeoutcount=" "$scriptpath"'/'"$FILE_DL_PRIM_SCR"))
-	search_and_replace timeoutcount= $scriptpath/$FILE_DL_PRIM_SCR $cur_timeoutcount $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
+	cur_timeoutcount=($(grep -m 1 "timeoutcount=" "$scriptpath_SVC"'/'"$FILE_DL_PRIM_SCR"))
+	search_and_replace timeoutcount= $scriptpath_SVC/$FILE_DL_PRIM_SCR $cur_timeoutcount $curdir/OVPN_SWITCH/$FILE_DL_PRIM_SCR
 
 fi
 
 # die Dateien in den Zielverzeichnissen ablegen
-mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_PRIM_SCR $scriptpath
-mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_WATC_SCR $scriptpath
+mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_PRIM_SCR $scriptpath_SVC
+mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_WATC_SCR $scriptpath_SVC
 mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_PRIM_SRV $servicepath
 mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_WATC_SRV $servicepath
-mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_CASC_SCR $scriptpath_PP
+mv -f $curdir'/OVPN_SWITCH/'$FILE_DL_CASC_SCR $scriptpath_UPD
 
 # die Scripte ausfuehrbar machen
-chmod +x $scriptpath'/'$FILE_DL_PRIM_SCR
-chmod +x $scriptpath'/'$FILE_DL_WATC_SCR
-chmod +x $scriptpath_PP'/'$FILE_DL_CASC_SCR
+chmod +x $scriptpath_SVC'/'$FILE_DL_PRIM_SCR
+chmod +x $scriptpath_SVC'/'$FILE_DL_WATC_SCR
+chmod +x $scriptpath_UPD'/'$FILE_DL_CASC_SCR
 
 # die Services ausfuehrbar machen und aktivieren
 chmod +x $servicepath'/'$FILE_DL_PRIM_SRV
@@ -203,8 +203,8 @@ rm -r $curdir'/'OVPN_SWITCH
 
 # Statusausgabe
 
-path_ovpn_conf=($(grep -m 1 'path_ovpn_conf=' $scriptpath'/'$FILE_DL_PRIM_SCR | rev | cut -d '=' -f 1 | rev))
-folder_logpath=($(grep -m 1 'folder_logpath=' $scriptpath'/'$FILE_DL_PRIM_SCR | rev | cut -d '=' -f 1 | rev))
+path_ovpn_conf=($(grep -m 1 'path_ovpn_conf=' $scriptpath_SVC'/'$FILE_DL_PRIM_SCR | rev | cut -d '=' -f 1 | rev))
+folder_logpath=($(grep -m 1 'folder_logpath=' $scriptpath_SVC'/'$FILE_DL_PRIM_SCR | rev | cut -d '=' -f 1 | rev))
 
 if [ $update_check -eq "1" ];
 then
