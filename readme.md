@@ -1,6 +1,12 @@
-# OpenVPN Kaskadierungs-Script für PerfectPrivacy
+# OpenVPN Kaskadierungs-Script
 
-Dieses Repository besteht aus insg. 3 Scripten und 2 Services welche ermöglichen, bei Nutzung des VPN-Anbieters [PerfectPrivacy](https://www.perfect-privacy.com), eine automatische Kaskadierung auszuführen
+Dieses Repository besteht aus insg. 3 Scripten und 2 Services welche ermöglichen, bei Nutzung eines kompatiblen VPN-Anbieters, eine automatische Kaskadierung auszuführen.
+Folgende Anbieter sind bekannt:
+
+* [Perfect Privacy](https://www.perfect-privacy.com) --> getestet
+* [oVPN](https://vcp.ovpn.to/) --> ungetestet
+* [ZorroVPN](https://zorrovpn.com/) --> ungetestet
+
 
 Durch Angabe einer maximalen Hopanzahl und einer min- sowie maxtime, können die Verbindungsparameter beinflusst werden.
 
