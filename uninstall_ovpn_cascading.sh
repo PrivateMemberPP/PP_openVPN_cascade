@@ -3,8 +3,8 @@
 # Bildschirm leeren
 clear
 
-printf "\n\nScript zur Deinstallation der automatischen PP openVPN Kaskadierungsdienste"
-printf "\n---------------------------------------------------------------------------\n\n"
+printf "\n\nScript zur Deinstallation der automatischen openVPN Kaskadierungsdienste"
+printf "\n------------------------------------------------------------------------\n\n"
 printf "... der Vorgang dauert weniger als eine Minute.\n\n"
 
 # Dienste stoppen
@@ -46,5 +46,5 @@ systemctl reset-failed
 printf "\n------------------------------------------------"
 printf "\nDeinstallation ERFOLGREICH abgeschlossen!"
 printf "\n------------------------------------------------"
-printf "\n\nEs wurden saemtliche Dateien entfernt, welche zu den PP openVPN Kaskadierungsdiensten gehören"
+printf "\n\nEs wurden saemtliche Dateien entfernt, welche zu den openVPN Kaskadierungsdiensten gehören"
 printf "\n\nBitte das System neustarten!\n\n"
