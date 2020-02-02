@@ -69,7 +69,7 @@ function continuously_check {
 		get_state
 
 		echo -e "\n\nVerbindung besteht seit:\t\t$(date)" >> $logfile_watchdog
-		echo -e "mit oeffentliche IP:\t\t\t$current_state" >> $logfile_watchdog
+		echo -e "mit oeffentlicher IP:\t\t\t$current_state" >> $logfile_watchdog
 
 		check_inactivity
 		check_state
