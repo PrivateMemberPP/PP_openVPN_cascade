@@ -1,6 +1,6 @@
 # OpenVPN Kaskadierungs-Script
 
-Dieses Repository besteht aus insg. 3 Scripten und 2 Services welche ermöglichen, bei Nutzung eines kompatiblen VPN-Anbieters, eine automatische Kaskadierung auszuführen.
+Die installierte Anwendung besteht aus insg. 3 Scripten und 2 Services welche ermöglichen, bei Nutzung eines kompatiblen VPN-Anbieters, eine automatische Kaskadierung auszuführen.
 Folgende Anbieter sind bekannt:
 
 * [Perfect Privacy](https://www.perfect-privacy.com) --> getestet
