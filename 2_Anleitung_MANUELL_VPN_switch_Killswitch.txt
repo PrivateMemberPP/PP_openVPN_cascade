@@ -17,16 +17,13 @@ Anleitung
 
 2. die Dateien ausführbar machen
 
-	a.	-> sudo chmod -x /etc/systemd/system/openvpn_service_restart_cascading.sh
-		-> sudo chmod 755 /etc/systemd/system/openvpn_service_restart_cascading.sh
+	a.	-> sudo chmod +x /etc/systemd/system/openvpn_service_restart_cascading.sh
 
-	b.	-> sudo chmod -x /etc/systemd/system/openvpn_service_restart_cascading_watchdog.sh
-		-> sudo chmod 755 /etc/systemd/system/openvpn_service_restart_cascading_watchdog.sh
+	b.	-> sudo chmod +x /etc/systemd/system/openvpn_service_restart_cascading_watchdog.sh
 
 3. das updown-Script (updown.sh) z.B. wie folgt ablegen und hier auch die Rechte anpassen
 	-> /etc/openvpn/updown.sh
-		-> sudo chmod -x /etc/openvpn/updown.sh
-		-> sudo chmod 755 /etc/openvpn/updown.sh
+		-> sudo chmod +x /etc/openvpn/updown.sh
 
 4.	a. einen Service erstellen, welcher das Hauptscript startet und -bei Bedarf- restartet
 
