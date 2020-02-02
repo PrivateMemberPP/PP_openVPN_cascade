@@ -2,7 +2,7 @@ Abhaengigkeit
 -------------
 sudo apt-get install ufw
 
-OpenVPN-Ports von Perfect-Privacy (UDP) bei Standardkonfig
+Beispiel OpenVPN-UDP-Ports
 ----------------------------------------------------------
 148
 149
@@ -16,7 +16,7 @@ OpenVPN-Ports von Perfect-Privacy (UDP) bei Standardkonfig
 
 ### bitte den physischen Netzwerkadapter (hier: eno1) in den Befehlen anpassen! ###
 ### auch nicht vergessen, vorher alle Ports/Protokolle freizugeben, welche zusaetzlich benötigt werden!!! ==> z.B. SSH ###
-### ACHTUNG: vorher bitte in den OpenVPN-Config-Dateien (Amsterdam.conf, Basel.conf...) prüfen, welche Ports diese verwenden (kann variieren), dementsprechend in den folgenden Freigaben die Ports anpassen! ###
+### ACHTUNG: vorher bitte in den OpenVPN-Config-Dateien prüfen, welche Ports diese verwenden (kann variieren), dementsprechend in den folgenden Freigaben die Ports anpassen! ###
 sudo ufw allow out on eno1 to any proto udp port 148
 sudo ufw allow out on eno1 to any proto udp port 149
 sudo ufw allow out on eno1 to any proto udp port 150
