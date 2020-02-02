@@ -11,7 +11,7 @@ logfile_script="$folder_logpath"vpnlog_restart.log
 # Pfad zu den OpenVPN-Configs, welche genutzt werden sollen
 path_ovpn_conf=/etc/openvpn/connections/
 #
-# Pfad zum Kaskadierungsscript von Perfect-Privacy
+# Pfad zum updown-Kaskadierungsscript
 path_ovpn_cascade_script=/etc/openvpn/updown.sh
 #
 # Checkfile fuer den Watchdog-Service (nur den Namen anpassen!)
@@ -345,7 +345,7 @@ do
 				# nun sind wir endgueltig verbunden und setzen als Merker ein Flag
 				connected_check=1
 			else
-				# falls das Flag fuer connected_check auf 1 gesetzt ist und wir hier rein rutschen, stimmt irgendetwas nicht
+				# falls das Flag fuer connected_check auf 1 gesetzt ist und wir hier rein rutschen, stimmt irgendetwas mit der Verbindung nicht
 				echo -e "\n\nVerbindungsproblem!" >> $logfile_script
 				echo -e "-------------------" >> $logfile_script
 				write_timestamp
