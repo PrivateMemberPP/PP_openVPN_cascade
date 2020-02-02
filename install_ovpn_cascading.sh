@@ -11,7 +11,7 @@ scriptpath_SVC=/etc/systemd/system
 # Pfad zur Ablage der Service/Dienst-Dateien
 servicepath=/lib/systemd/system
 #
-# Pfad zur Ablage des PP Kaskadierungsscripts
+# Pfad zur Ablage des Kaskadierungsscripts
 scriptpath_UPD=/etc/openvpn
 #
 # Downloadlink Hauptscript
@@ -50,8 +50,8 @@ then
 	rm $install_log
 fi
 
-printf "\n\nScript zur Installation der automatischen PP openVPN Kaskadierungsdienste" 2>&1 | tee -a $install_log
-printf "\n-------------------------------------------------------------------------\n\n" 2>&1 | tee -a $install_log
+printf "\n\nScript zur Installation der automatischen openVPN Kaskadierungsdienste" 2>&1 | tee -a $install_log
+printf "\n----------------------------------------------------------------------\n\n" 2>&1 | tee -a $install_log
 printf "... der Vorgang dauert weniger als eine Minute.\n\n" 2>&1 | tee -a $install_log
 
 # Paketdaten und Repository aktualisieren
