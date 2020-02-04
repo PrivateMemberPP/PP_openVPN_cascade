@@ -65,6 +65,8 @@ if [ $? -eq "1" ];
 then
 	apt-get install tmux -qq > /dev/null
 	printf "==> tmux installiert!\n" 2>&1 | tee -a $install_log
+else
+	printf "==> tmux ist vorhanden!\n" 2>&1 | tee -a $install_log
 fi
 
 # pruefen, ob 'openvpn-client' installiert ist -> falls nein, installieren!
@@ -74,6 +76,8 @@ if [ $? -eq "1" ];
 then
 	apt-get install openvpn -qq > /dev/null
 	printf "==> openvpn installiert!\n" 2>&1 | tee -a $install_log
+else
+	printf "==> openvpn ist vorhanden!\n" 2>&1 | tee -a $install_log
 fi
 
 # pruefen, ob 'resolvconf' installiert ist -> falls nein, installieren!
@@ -83,6 +87,8 @@ if [ $? -eq "1" ];
 then
 	apt-get install resolvconf -qq > /dev/null
 	printf "==> resolvconf installiert!\n" 2>&1 | tee -a $install_log
+else
+	printf "==> resolvconf ist vorhanden!\n" 2>&1 | tee -a $install_log
 fi
 
 # pruefen, ob 'psmisc' installiert ist -> falls nein, installieren!
@@ -92,6 +98,8 @@ if [ $? -eq "1" ];
 then
 	apt-get install psmisc -qq > /dev/null
 	printf "==> psmisc installiert!\n" 2>&1 | tee -a $install_log
+else
+	printf "==> psmisc ist vorhanden!\n" 2>&1 | tee -a $install_log
 fi
 
 # pruefen, ob 'bc' installiert ist -> falls nein, installieren!
@@ -101,6 +109,8 @@ if [ $? -eq "1" ];
 then
 	apt-get install bc -qq > /dev/null
 	printf "==> bc installiert!\n\n" 2>&1 | tee -a $install_log
+else
+	printf "==> bc ist vorhanden!\n" 2>&1 | tee -a $install_log
 fi
 
 ### notwendige Pakete installiert
