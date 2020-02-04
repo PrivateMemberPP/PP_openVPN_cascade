@@ -59,7 +59,7 @@ apt-get update -qq
 
 ### notwendige Pakete installieren
 # pruefen, ob 'tmux' installiert ist -> falls nein, installieren!
-dpkg-query -l | grep -w "tmux" > /dev/null
+dpkg -l | grep ^ii | awk '{print $2}' | grep -w "tmux" > /dev/null
 
 if [ $? -eq "1" ];
 then
@@ -68,7 +68,7 @@ then
 fi
 
 # pruefen, ob 'openvpn-client' installiert ist -> falls nein, installieren!
-dpkg-query -l | grep -w "openvpn" > /dev/null
+dpkg -l | grep ^ii | awk '{print $2}' | grep -w "openvpn" > /dev/null
 
 if [ $? -eq "1" ];
 then
@@ -77,7 +77,7 @@ then
 fi
 
 # pruefen, ob 'resolvconf' installiert ist -> falls nein, installieren!
-dpkg-query -l | grep -w "resolvconf" > /dev/null
+dpkg -l | grep ^ii | awk '{print $2}' | grep -w "resolvconf" > /dev/null
 
 if [ $? -eq "1" ];
 then
@@ -86,7 +86,7 @@ then
 fi
 
 # pruefen, ob 'psmisc' installiert ist -> falls nein, installieren!
-dpkg-query -l | grep -w "psmisc" > /dev/null
+dpkg -l | grep ^ii | awk '{print $2}' | grep -w "psmisc" > /dev/null
 
 if [ $? -eq "1" ];
 then
@@ -95,7 +95,7 @@ then
 fi
 
 # pruefen, ob 'bc' installiert ist -> falls nein, installieren!
-dpkg-query -l | grep -w "bc" > /dev/null
+dpkg -l | grep ^ii | awk '{print $2}' | grep -w "bc" > /dev/null
 
 if [ $? -eq "1" ];
 then
