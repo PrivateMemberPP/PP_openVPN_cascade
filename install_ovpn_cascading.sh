@@ -52,6 +52,16 @@ fi
 
 printf "\n\nScript zur Installation der automatischen openVPN Kaskadierungsdienste" 2>&1 | tee -a $install_log
 printf "\n----------------------------------------------------------------------\n\n" 2>&1 | tee -a $install_log
+
+if ! command -v dpkg >> /dev/null
+then
+	printf "Paketmanager 'dpkg' fehlt!" 2>&1 | tee -a $install_log
+	printf "\nBitte erst 'dpkg' installieren und im Anschluss das Script erneut ausfuehren." 2>&1 | tee -a $install_log
+	printf "\nDie Installation wird abgebrochen!" 2>&1 | tee -a $install_log
+	printf "\n\n"
+	exit
+fi
+
 printf "... der Vorgang dauert weniger als eine Minute.\n\n" 2>&1 | tee -a $install_log
 
 # Paketdaten und Repository aktualisieren
