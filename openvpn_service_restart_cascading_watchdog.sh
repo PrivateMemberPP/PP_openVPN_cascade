@@ -42,7 +42,7 @@ function check_inactivity {
 function check_state {
 	wget -qO- icanhazip.com | grep "$current_state" >> /dev/null
 	RET=$?
-	sleep 8
+	sleep 4
 }
 function cleanup {
 	sudo killall openvpn
@@ -104,6 +104,9 @@ timeout=0
 
 while true
 do
+	# Wenn das LOG groesser als 20MB ist, dieses leeren
+	log_delete
+
 	checkfile
 
 	case "$chkfl" in
@@ -113,21 +116,23 @@ do
 			case "$current_state" in
 				Warten)
 					sleep 5
+					timeout=0
 					;;
 				*)
 					continuously_check
+					timeout=0
 					;;
 			esac
 			;;
 
 		# Datei existiert noch nicht, erneut pruefen
 		0)
-			# Wenn das LOG groesser als 20MB ist, dieses leeren
-			log_delete
 
 			sleep 2
 			timeout=$(("timeout" + "2"))
 
+			# falls nach einem gewissen Counter die Datei noch nicht existiert, stimmt irgendwas nicht
+			# fuer diesen Fall den primaeren Prozess neustarten
 			if [ "$timeout" -eq "10" ]
 			then
 				kill_primary_process
