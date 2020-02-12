@@ -89,7 +89,7 @@ function get_end_tim {
 	curtim_dat=$(date +"%Y-%m-%dT%H:%M:%S")
 	curtim_sec=$(date --date="$curtim_dat" +%s)
 	endtim_sec=$((curtim_sec+timer))
-	endtim_dat=$(date -d @$endtim_sec +"%a%e. %b %H:%M:%S %Z %Y")
+	endtim_dat=$(date -d @$endtim_sec +"%a %e. %b %H:%M:%S %Z %Y")
 }
 function vpn_connect_initial_one {
 	echo -e "\nVPN-Verbindung Nr. $hopnr wird aufgebaut nach:\t\t$server_name" >> $logfile_script
