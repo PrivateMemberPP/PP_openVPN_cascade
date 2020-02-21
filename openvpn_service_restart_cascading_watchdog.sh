@@ -40,7 +40,7 @@ function check_inactivity {
 	fi
 }
 function check_state {
-	wget -qO- icanhazip.com | grep "$current_state" >> /dev/null
+	wget -O - -q --tries=1 --timeout=10 icanhazip.com | grep "$current_state" >> /dev/null
 	RET=$?
 	sleep 4
 }
