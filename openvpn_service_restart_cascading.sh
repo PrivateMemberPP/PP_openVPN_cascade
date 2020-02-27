@@ -220,7 +220,7 @@ do
 		current_state=$(cat $checkfile_watchdog)
 
 		# pruefen, eine Verbindung besteht / der Ausgangsserver verwendet wird
-		if wget -O - -q --tries=1 --timeout=10 ipv4.icanhazip.com | grep "$current_state" >> /dev/null
+		if wget -O - -q --tries=3 --timeout=20 ipv4.icanhazip.com | grep "$current_state" >> /dev/null
 		then
 			# 10 Sekunden warten, bevor erneut geprueft wird
 			sleep 10
