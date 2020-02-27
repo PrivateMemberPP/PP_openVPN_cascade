@@ -220,7 +220,7 @@ do
 		current_state=$(cat $checkfile_watchdog)
 
 		# pruefen, eine Verbindung besteht / der Ausgangsserver verwendet wird
-		if wget -O - -q --tries=1 --timeout=10 icanhazip.com | grep "$current_state" >> /dev/null
+		if wget -O - -q --tries=1 --timeout=10 ipv4.icanhazip.com | grep "$current_state" >> /dev/null
 		then
 			# 10 Sekunden warten, bevor erneut geprueft wird
 			sleep 10
@@ -328,7 +328,7 @@ do
 				else
 					echo -e "MaxHOP auf $maxhop festgelegt, keine weiteren Verbindungen benoetigt!" >> $logfile_script
 				fi
-				echo "$(wget -qO- icanhazip.com)" > $checkfile_watchdog
+				echo "$(wget -qO- ipv4.icanhazip.com)" > $checkfile_watchdog
 
 				if [ "$maxhop" -gt "1" ];
 				then
