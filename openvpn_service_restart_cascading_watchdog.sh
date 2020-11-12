@@ -87,7 +87,7 @@ function continuously_check {
 			{
 				echo -e "\n----------ACHTUNG----------"
 				echo -e "Es ist jetzt $(date)"
-				echo -e "Oeffentliche IP hat sich geaendert:\t$(wget -O - -q --tries=3 --timeout=20 ipv4.icanhazip.com)"
+				echo -e "Oeffentliche IP hat sich geaendert zu:\t$current_state"
 				echo -e "Dienste nun neustarten, damit ein sicherer Zustand wiederhergestellt werden kann!"
 			} >> $logfile_watchdog
 			kill_primary_process
