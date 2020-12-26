@@ -280,7 +280,7 @@ do
 					do
 						errorcount=0
 
-						# wir benoetigen fuer die folgenden Verbindungen jeweils das vorherrige Gateway
+						# wir benoetigen fuer die folgenden Verbindungen jeweils das vorherige Gateway
 						get_last_gw
 
 						echo -e "Das Gateway von HOP Nr. $((hopnr-1)) lautet:\t\t\t$gw_vorheriger_hop\n" >> $logfile_script
