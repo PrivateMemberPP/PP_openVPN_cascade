@@ -21,13 +21,13 @@ checkfile_watchdog="$folder_logpath"exitnode.log
 scriptfile_watchdog=/etc/systemd/system/openvpn_service_restart_cascading_watchdog.sh
 #
 # minimale Verbindungsdauer in Sekunden
-mintime=7200
+mintime=20000
 #
 # maximale Verbindungsdauer in Sekunden
-maxtime=10800
+maxtime=30000
 #
 # Wie viele HOPs sollen verbunden werden?
-maxhop=3
+maxhop=2
 #
 # Timeout-Counter (in Sekunden) zum Verbindungsaufbau (Wert wird je HOP um 10 Sekunden verlaengert)
 # HINWEIS: die erste Verbindung benoetigt i.d.R. '16' Sekunden
@@ -89,7 +89,7 @@ function get_end_tim {
 	curtim_dat=$(date +"%Y-%m-%dT%H:%M:%S")
 	curtim_sec=$(date --date="$curtim_dat" +%s)
 	endtim_sec=$((curtim_sec+timer))
-	endtim_dat=$(date -d @$endtim_sec +"%a %e. %b %H:%M:%S %Z %Y")
+	endtim_dat=$(date -d @$endtim_sec +"%a %b %e %H:%M:%S %Z %Y")
 }
 function vpn_connect_initial_one {
 	echo -e "\nVPN-Verbindung Nr. $hopnr wird aufgebaut nach:\t\t$server_name" >> $logfile_script
@@ -220,7 +220,7 @@ do
 		current_state=$(cat $checkfile_watchdog)
 
 		# pruefen, eine Verbindung besteht / der Ausgangsserver verwendet wird
-		if wget -O - -q --tries=3 --timeout=20 ipv4.icanhazip.com | grep "$current_state" >> /dev/null
+		if wget -O - -q --tries=3 --timeout=20 https://checkip.perfect-privacy.com/json | cut -d '"' -f 8 | grep "$current_state" >> /dev/null
 		then
 			# 10 Sekunden warten, bevor erneut geprueft wird
 			sleep 10
@@ -285,7 +285,7 @@ do
 
 						echo -e "Das Gateway von HOP Nr. $((hopnr-1)) lautet:\t\t\t$gw_vorheriger_hop\n" >> $logfile_script
 
-						# jede weitere Verbindung soll 10 Sekunden mehr Timeout erhalten
+						# fuer jeden weiteren Hop soll das Timeout inkrementiert werden
 						incr_time
 
 						# den jeweils naechsten Server ermitteln und im Anschluss das Array konsolidieren
@@ -303,10 +303,10 @@ do
 								rm -rf "$folder_logpath"log.vpnhop"$hopnr"
 								errorcount=0
 
-								# den ersten Server erneut ermitteln und das Array konsolidieren
+								# den jeweils naechten Server erneut ermitteln und das Array konsolidieren
 								remux_server_list
 
-								# die initiale Verbindung erneut versuchen aufzubauen
+								# die naechste Verbindung erneut versuchen aufzubauen
 								vpn_connect_following_n
 							else
 								echo -e "\n\nVerbindungsproblem!" >> $logfile_script
@@ -328,7 +328,9 @@ do
 				else
 					echo -e "MaxHOP auf $maxhop festgelegt, keine weiteren Verbindungen benoetigt!" >> $logfile_script
 				fi
-				echo "$(wget -qO- ipv4.icanhazip.com)" > $checkfile_watchdog
+
+				# in das Watchdog-Checkfile unsere Ausgangs-IP abspeichern
+				echo "$(wget -O - -q --tries=3 --timeout=20 https://checkip.perfect-privacy.com/json | cut -d '"' -f 8)" > $checkfile_watchdog
 
 				if [ "$maxhop" -gt "1" ];
 				then
@@ -374,6 +376,6 @@ do
 	# das Array mit den gespeicherten Servern loeschen
 	unset con_servers
 
-	# nun geht es wieder zurueck zum Anfang der aeusseren Schleife
+# nun geht es wieder zurueck zum Anfang der aeusseren Schleife
 done
 ### ENDE aeussere Schleife ###
