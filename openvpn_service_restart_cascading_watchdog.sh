@@ -6,10 +6,10 @@
 folder_logpath=/var/log/ovpn_reconnect/
 #
 # Logfile fuer dieses Watchdog-Script
-logfile_watchdog="$folder_logpath"watchdog_openvpn_reconnect.log
+logfile_watchdog=/var/log/ovpn_reconnect/watchdog_openvpn_reconnect.log
 #
 # Checkfile fuer den Watchdog-Service
-checkfile_watchdog="$folder_logpath"exitnode.log
+checkfile_watchdog=/var/log/ovpn_reconnect/exitnode.log
 #
 ### ENDE Variablen deklarieren ###
 #
@@ -40,9 +40,9 @@ function check_inactivity {
 	fi
 }
 function check_state {
-	wget -O - -q --tries=3 --timeout=20 ipv4.icanhazip.com | grep "$current_state" >> /dev/null
+	wget -O - -q --tries=3 --timeout=20 https://checkip.perfect-privacy.com/json | cut -d '"' -f 8 | grep "$current_state" >> /dev/null
 	RET=$?
-	pub_ip=$(wget -O - -q --tries=3 --timeout=20 ipv4.icanhazip.com)
+	pub_ip=$(wget -O - -q --tries=3 --timeout=20 https://checkip.perfect-privacy.com/json | cut -d '"' -f 8)
 	sleep 4
 }
 function cleanup {
@@ -88,7 +88,7 @@ function continuously_check {
 			{
 				echo -e "\n----------ACHTUNG----------"
 				echo -e "Es ist jetzt $(date)"
-				echo -e "Oeffentliche IP hat sich geaendert zu:\t$pub_ip"
+				echo -e "Oeffentliche IP hat sich geaendert!"
 				echo -e "Dienste nun neustarten, damit ein sicherer Zustand wiederhergestellt werden kann!"
 			} >> $logfile_watchdog
 			kill_primary_process
