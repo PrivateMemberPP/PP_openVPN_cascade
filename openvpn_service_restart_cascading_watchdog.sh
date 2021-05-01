@@ -6,10 +6,10 @@
 folder_logpath=/var/log/ovpn_reconnect/
 #
 # Logfile fuer dieses Watchdog-Script
-logfile_watchdog=/var/log/ovpn_reconnect/watchdog_openvpn_reconnect.log
+logfile_watchdog="$folder_logpath"watchdog_openvpn_reconnect.log
 #
 # Checkfile fuer den Watchdog-Service
-checkfile_watchdog=/var/log/ovpn_reconnect/exitnode.log
+checkfile_watchdog="$folder_logpath"exitnode.log
 #
 ### ENDE Variablen deklarieren ###
 #
