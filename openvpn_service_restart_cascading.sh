@@ -33,6 +33,12 @@ maxhop=2
 # HINWEIS: die erste Verbindung benoetigt i.d.R. '16' Sekunden
 timeoutcount=20
 #
+# Dateiname dieses Scripts OHNE Pfad
+my_name=${0##*/}
+#
+# Dateiname Watchdog-Skript OHNE Pfad
+wd_name=${scriptfile_watchdog##*/}
+#
 ### ENDE Variablen deklarieren ###
 
 ### Definition von Funktionen ###
@@ -47,14 +53,14 @@ function cleanup {
 }
 function kill_primary_process {
 	cleanup
-	PID=$(systemctl --property="MainPID" show openvpn-restart-cascading.service | cut -d '=' -f 2)
+	PID=$(pgrep -f "$my_name")
 	sleep 0.5
-	sudo kill -9 -"$(ps -o pgid= "$PID" | grep -o '[0-9]*')" > /dev/null
+	sudo kill -9 -"$PID" > /dev/null
 }
 function kill_watchdog_process {
-	PID=$(systemctl --property="MainPID" show openvpn-restart-cascading-watchdog.service | cut -d '=' -f 2)
+	PID=$(pgrep -f "$wd_name")
 	sleep 0.5
-	sudo kill -9 -"$(ps -o pgid= "$PID" | grep -o '[0-9]*')" > /dev/null
+	sudo kill -9 -"$PID" > /dev/null
 }
 function ermittle_server {
 	mapfile -t server_list < <(eval ls -1 "$path_ovpn_conf"'*.conf' | sed 's/,//g' | rev |  cut -d '/' -f 1 | rev)
@@ -330,7 +336,7 @@ do
 				fi
 
 				# in das Watchdog-Checkfile unsere Ausgangs-IP abspeichern
-				echo "$(wget -O - -q --tries=3 --timeout=20 https://checkip.perfect-privacy.com/json | cut -d '"' -f 8)" > $checkfile_watchdog
+				wget -O - -q --tries=3 --timeout=20 https://checkip.perfect-privacy.com/json | cut -d '"' -f 8 > $checkfile_watchdog
 
 				if [ "$maxhop" -gt "1" ];
 				then
