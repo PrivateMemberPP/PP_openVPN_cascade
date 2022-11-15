@@ -55,7 +55,7 @@ function kill_primary_process {
 	cleanup
 	PID=$(sudo systemctl --property="MainPID" show openvpn-restart-cascading.service | cut -d '=' -f 2)
 	sleep 0.2
-	sudo kill -9 -"$(ps -o pgid= "$PID" | grep -o '[0-9]*')" > /dev/null
+	sudo kill -9 "$(ps -o pgid= "$PID" | grep -o '[0-9]*')" > /dev/null
 }
 function log_delete {
 	if [[ "$(wc -c $logfile_watchdog | cut -d ' ' -f 1)" -gt "20480" ]];
