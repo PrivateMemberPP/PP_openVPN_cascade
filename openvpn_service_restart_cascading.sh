@@ -55,12 +55,12 @@ function kill_primary_process {
 	cleanup
 	PID=$(pgrep -f "$my_name")
 	sleep 0.5
-	sudo kill -9 -"$PID" > /dev/null
+	sudo kill -9 "$PID" > /dev/null
 }
 function kill_watchdog_process {
 	PID=$(pgrep -f "$wd_name")
 	sleep 0.5
-	sudo kill -9 -"$PID" > /dev/null
+	sudo kill -9 "$PID" > /dev/null
 }
 function ermittle_server {
 	mapfile -t server_list < <(eval ls -1 "$path_ovpn_conf"'*.conf' | sed 's/,//g' | rev |  cut -d '/' -f 1 | rev)
