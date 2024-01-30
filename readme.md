@@ -95,9 +95,6 @@ less /var/log/ovpn_reconnect/vpnlog_restart.log
 * NotePad++
 * Love ♥
 
-## Autoren
-
-* **Patrick Meinhardt**
 
 ## Donate
 
